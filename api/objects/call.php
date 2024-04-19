@@ -21,10 +21,8 @@ class Call
     $this->conn = $db;
   }
 
-  // read all crews with their members' names
   function read()
   {
-    // select all query with JOINs
     $query = "SELECT c.id_call, c.id_user, c.id_crew,
     p.id_patient,
     u.name AS user_name, 
@@ -36,19 +34,15 @@ class Call
     LEFT JOIN patient p ON c.id_patient = p.id_patient 
     ORDER BY c.time DESC";
 
-    // prepare query statement
     $stmt = $this->conn->prepare($query);
 
-    // execute query
     $stmt->execute();
 
     return $stmt;
   }
 
-  // get single crew data with their members' names
   function read_single($id_call)
   {
-    // select all query with JOINs
     $query = "SELECT c.id_call, c.id_user, c.id_crew, c.id_patient, 
     u.name AS user_name, 
     p.name AS patient_name, 
@@ -59,18 +53,15 @@ class Call
     LEFT JOIN patient p ON c.id_patient = p.id_patient 
     WHERE c.id_call = ?";
 
-    // prepare query statement
     $stmt = $this->conn->prepare($query);
 
-    // bind id of crew to be updated
     $stmt->bindParam(1, $id_call);
 
-    // execute query
     $stmt->execute();
 
     return $stmt;
   }
-
+ 
   function create()
   {
     try {
@@ -104,28 +95,23 @@ class Call
 function update()
 {
     try {
-        // query to update record
-        $query = 'UPDATE ' . $this->table_name . ' SET id_crew=?, id_user=?, id_patient=?, adress=?, number=?, type=? WHERE id_call=?';
+        $query = 'UPDATE ' . $this->table_name . ' SET id_crew=?, id_patient=?, adress=?, number=?, type=? WHERE id_call=?';
 
-        // prepare query
         $stmt = $this->conn->prepare($query);
 
-        // bind values
         $stmt->bindParam(1, $this->id_crew);
-        $stmt->bindParam(2, $this->id_user);
-        $stmt->bindParam(3, $this->id_patient);
-        $stmt->bindParam(4, $this->adress);
-        $stmt->bindParam(5, $this->number);
-        $stmt->bindParam(6, $this->type);
-        $stmt->bindParam(7, $this->id_call);
+        $stmt->bindParam(2, $this->id_patient);
+        $stmt->bindParam(3, $this->adress);
+        $stmt->bindParam(4, $this->number);
+        $stmt->bindParam(5, $this->type);
+        $stmt->bindParam(6, $this->id_call);
 
-        // execute query
         if ($stmt->execute()) {
             return true;
         }
-
         return false;
     } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
         return false;
     }
 }

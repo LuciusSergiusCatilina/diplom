@@ -109,11 +109,12 @@ include('../master.php');
       url: '../api/call/update.php',
       dataType: 'json',
       data: {
-        id: <?php echo $_GET['id']; ?>,
-        id_driver: $("#driver").val(),
-        id_doctor: $("#doctor").val(),
-        id_paramedic: $("#paramedic").val(),
-        id_orderly: $("#orderly").val()
+        id_call: <?php echo $_GET['id']; ?>,
+        id_crew: $("#crew").val(),
+        id_patient: $("#patient").val(),
+        adress: $("#adress").val(),
+        type: $("#type").val(),
+        number: $("#phone").val()
       },
       error: function(result) {
         alert(result['message']);
@@ -121,8 +122,7 @@ include('../master.php');
       success: function(result) {
         if (result['status'] == true) {
           alert("Данные экипажа обновлены!");
-          //console.log(data);
-          window.location.href = '/medibed/crew';
+          window.location.href = '/medibed/call';
         } else {
           alert(result['message']);
         }

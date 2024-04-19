@@ -12,11 +12,10 @@ $db = $database->getConnection();
 $call = new Call($db); // Создание объекта Call
  
 // set call property values
-$call->id_call = $_POST['id'];
-$call->id_user = $_POST['id_driver']; // Предполагается, что id_driver соответствует id_user в классе Call
-$call->id_crew = $_POST['id_crew'];
+$call->id_call = $_POST['id_call'];
+$call->id_crew = ($_POST['id_crew'] == '') ? null : $_POST['id_crew'];
+$call->id_patient = ($_POST['id_patient'] == '') ? null : $_POST['id_patient'];
 $call->adress = $_POST['adress']; // Предполагается, что adress соответствует адресу вызова
-//$call->time = $_POST['time']; // Предполагается, что time соответствует времени вызова
 $call->number = $_POST['number']; // Предполагается, что number соответствует номеру вызова
 $call->type = $_POST['type']; // Предполагается, что type соответствует типу вызова
 
