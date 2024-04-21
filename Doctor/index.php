@@ -8,17 +8,15 @@
                      <h3 class="box-title">Список докторов</h3>
                  </div>
                  <div class="col-xs-3">
-                     <!-- Добавленная строка поиска -->
                      <form action="#" method="get" class="pull-right">
                          <div class="input-group">
-                         <input type="text" name="search" id = "search" class="form-control input-sm" onkeyup="searchFunction(\'doctors\')" placeholder="Поиск по имени...">
+                         <input type="text" name="search" id = "search" class="form-control input-sm" onkeyup="searchFunction(\'doctors\')" placeholder="Поиск">
                              <span class="input-group-btn">
                                  <button type="submit" name="search" id="search-btn" class="btn btn-flat btn-sm"><i class="fa fa-search"></i>
                                  </button>
                              </span>
                          </div>
                      </form>
-                     <!-- /Добавленная строка поиска -->
                  </div>
              </div>
          </div>
