@@ -1,31 +1,50 @@
 <?php
  $content = '<div class="row">
-                <div class="col-xs-12">
-                <div class="box">
-                 <div class="box-header">
-                    <h3 class="box-title">Список докторов</h3>
+ <div class="col-xs-12">
+     <div class="box">
+         <div class="box-header">
+             <div class="row">
+                 <div class="col-xs-9">
+                     <h3 class="box-title">Список докторов</h3>
                  </div>
-                 <!-- /.box-header -->
-                 <div class="box-body">
-                    <table id="doctors" class="table table-bordered table-hover">
-                      <thead>
-                      <tr>
-                        <th>ФИО</th>
-                        <th>Номер телефона</th>
-                        <th>Специализация</th>
-                        <th>Действия</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      </tbody>
+                 <div class="col-xs-3">
+                     <!-- Добавленная строка поиска -->
+                     <form action="#" method="get" class="pull-right">
+                         <div class="input-group">
+                         <input type="text" name="search" id = "search" class="form-control input-sm" onkeyup="searchFunction(\'doctors\')" placeholder="Поиск по имени...">
+                             <span class="input-group-btn">
+                                 <button type="submit" name="search" id="search-btn" class="btn btn-flat btn-sm"><i class="fa fa-search"></i>
+                                 </button>
+                             </span>
+                         </div>
+                     </form>
+                     <!-- /Добавленная строка поиска -->
+                 </div>
+             </div>
+         </div>
+         <!-- /.box-header -->
+         <div class="box-body">
+             <table id="doctors" class="table table-bordered table-hover">
+                 <thead>
+                     <tr>
+                         <th>ФИО</th>
+                         <th>Номер телефона</th>
+                         <th>Специализация</th>
+                         <th>Действия</th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                 </tbody>
+             </table>
+         </div>
+         <!-- /.box-body -->
+     </div>
+     <!-- /.box -->
+ </div>
+</div>
+<script src = "../dist/js/searchBar.js"></script>
 
-                    </table>
-                 </div>
-                 <!-- /.box-body -->
-                </div>
-                <!-- /.box -->
-              </div>
-            </div>';
+';
  include('../master.php');
 ?>
 <!-- page script -->
