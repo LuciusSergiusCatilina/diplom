@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Хост: 127.0.0.1
--- Время создания: Апр 10 2024 г., 22:21
--- Версия сервера: 10.4.32-MariaDB
--- Версия PHP: 8.2.12
+-- Host: 127.0.0.1
+-- Generation Time: Apr 22, 2024 at 08:54 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,30 +18,41 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- База данных: `station_db`
+-- Database: `station_db`
 --
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `calls`
+-- Table structure for table `calls`
 --
 
 CREATE TABLE `calls` (
   `id_call` int(11) NOT NULL,
-  `id_user` int(11) NOT NULL,
-  `id_crew` int(6) NOT NULL,
-  `id_patient` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL DEFAULT 1,
+  `id_crew` int(6) DEFAULT NULL,
+  `id_patient` int(11) DEFAULT NULL,
   `adress` text NOT NULL,
-  `time` date NOT NULL DEFAULT current_timestamp(),
+  `time` datetime NOT NULL DEFAULT current_timestamp(),
   `number` text NOT NULL,
   `type` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `calls`
+--
+
+INSERT INTO `calls` (`id_call`, `id_user`, `id_crew`, `id_patient`, `adress`, `time`, `number`, `type`) VALUES
+(1, 1, 456, 2, 'ул. Мира д.7', '2024-04-14 00:00:00', '+7900000001', 'Консультация'),
+(2, 1, 111, 2, 'ЛД', '2024-04-14 19:59:53', '+79000452', 'смэрть'),
+(3, 1, NULL, NULL, 'Ул Убийц д.666', '2024-04-15 19:36:09', '+7999999999', 'Консультация'),
+(4, 1, NULL, NULL, 'Ул ЗЛАААА', '2024-04-15 20:34:15', '+7988888888', 'Консультация'),
+(5, 1, NULL, 2, '', '2024-04-15 20:34:40', '', 'Консультация');
+
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `crews`
+-- Table structure for table `crews`
 --
 
 CREATE TABLE `crews` (
@@ -53,18 +64,27 @@ CREATE TABLE `crews` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Дамп данных таблицы `crews`
+-- Dumping data for table `crews`
 --
 
 INSERT INTO `crews` (`id_crew`, `id_driver`, `id_doctor`, `id_paramedic`, `id_orderly`) VALUES
-(43, 3, 18, 3, 3),
-(666, 3, 18, NULL, 3),
-(777, 3, 18, 3, 3);
+(55, 3, 19, NULL, 4),
+(111, 3, 18, 3, 4),
+(456, 3, 18, NULL, 4),
+(666, 3, 18, NULL, 4),
+(777, 3, 18, NULL, 4),
+(888, 3, 18, NULL, 4),
+(999, 3, 18, NULL, 4),
+(9991, 3, 18, NULL, 4),
+(99912, 3, 18, NULL, 4),
+(99913, 3, 18, NULL, 4),
+(99914, 3, 18, NULL, 4),
+(99915, 3, 18, NULL, 4);
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `doctor`
+-- Table structure for table `doctor`
 --
 
 CREATE TABLE `doctor` (
@@ -75,17 +95,18 @@ CREATE TABLE `doctor` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Дамп данных таблицы `doctor`
+-- Dumping data for table `doctor`
 --
 
 INSERT INTO `doctor` (`id_doctor`, `name`, `number`, `specialization`) VALUES
-(18, 'Айболит', '+79004821223', 'Педиатр'),
-(19, 'Биша Мари-Франсуа Ксавье ', '+79991235421', 'Психиатр');
+(18, 'Айболит', '+79004821224', 'Педиатр'),
+(19, 'Биша Мари-Франсуа Ксавье sadsa', '+79991235421', 'Психиатр'),
+(20, 'Джокушка Джокер', '+7993291312', 'Психиатр');
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `drivers`
+-- Table structure for table `drivers`
 --
 
 CREATE TABLE `drivers` (
@@ -95,7 +116,7 @@ CREATE TABLE `drivers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Дамп данных таблицы `drivers`
+-- Dumping data for table `drivers`
 --
 
 INSERT INTO `drivers` (`id_drivers`, `name`, `phone`) VALUES
@@ -104,7 +125,7 @@ INSERT INTO `drivers` (`id_drivers`, `name`, `phone`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `orderly`
+-- Table structure for table `orderly`
 --
 
 CREATE TABLE `orderly` (
@@ -114,16 +135,16 @@ CREATE TABLE `orderly` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Дамп данных таблицы `orderly`
+-- Dumping data for table `orderly`
 --
 
 INSERT INTO `orderly` (`id_orderly`, `name`, `number`) VALUES
-(3, 'Артём Франк', '+73249117534');
+(4, 'Санитар', '+79004825606');
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `paramedic`
+-- Table structure for table `paramedic`
 --
 
 CREATE TABLE `paramedic` (
@@ -133,7 +154,7 @@ CREATE TABLE `paramedic` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Дамп данных таблицы `paramedic`
+-- Dumping data for table `paramedic`
 --
 
 INSERT INTO `paramedic` (`id_paramedic`, `name`, `number`) VALUES
@@ -142,7 +163,7 @@ INSERT INTO `paramedic` (`id_paramedic`, `name`, `number`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `patient`
+-- Table structure for table `patient`
 --
 
 CREATE TABLE `patient` (
@@ -153,7 +174,7 @@ CREATE TABLE `patient` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Дамп данных таблицы `patient`
+-- Dumping data for table `patient`
 --
 
 INSERT INTO `patient` (`id_patient`, `name`, `number`, `adress`) VALUES
@@ -162,22 +183,30 @@ INSERT INTO `patient` (`id_patient`, `name`, `number`, `adress`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
   `id_user` int(11) NOT NULL,
+  `name` text NOT NULL,
   `login` text NOT NULL,
   `password` text NOT NULL,
   `role` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Индексы сохранённых таблиц
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id_user`, `name`, `login`, `password`, `role`) VALUES
+(1, 'Админ Админыч', 'admin', 'admin', 'admin');
+
+--
+-- Indexes for dumped tables
 --
 
 --
--- Индексы таблицы `calls`
+-- Indexes for table `calls`
 --
 ALTER TABLE `calls`
   ADD PRIMARY KEY (`id_call`),
@@ -186,7 +215,7 @@ ALTER TABLE `calls`
   ADD KEY `id_user` (`id_user`);
 
 --
--- Индексы таблицы `crews`
+-- Indexes for table `crews`
 --
 ALTER TABLE `crews`
   ADD PRIMARY KEY (`id_crew`),
@@ -196,14 +225,14 @@ ALTER TABLE `crews`
   ADD KEY `id_paramedic` (`id_paramedic`);
 
 --
--- Индексы таблицы `doctor`
+-- Indexes for table `doctor`
 --
 ALTER TABLE `doctor`
   ADD PRIMARY KEY (`id_doctor`),
   ADD UNIQUE KEY `number` (`number`) USING HASH;
 
 --
--- Индексы таблицы `drivers`
+-- Indexes for table `drivers`
 --
 ALTER TABLE `drivers`
   ADD PRIMARY KEY (`id_drivers`),
@@ -211,84 +240,84 @@ ALTER TABLE `drivers`
   ADD UNIQUE KEY `phone_2` (`phone`) USING HASH;
 
 --
--- Индексы таблицы `orderly`
+-- Indexes for table `orderly`
 --
 ALTER TABLE `orderly`
   ADD PRIMARY KEY (`id_orderly`),
   ADD UNIQUE KEY `number` (`number`) USING HASH;
 
 --
--- Индексы таблицы `paramedic`
+-- Indexes for table `paramedic`
 --
 ALTER TABLE `paramedic`
   ADD PRIMARY KEY (`id_paramedic`),
   ADD UNIQUE KEY `number` (`number`) USING HASH;
 
 --
--- Индексы таблицы `patient`
+-- Indexes for table `patient`
 --
 ALTER TABLE `patient`
   ADD PRIMARY KEY (`id_patient`),
   ADD UNIQUE KEY `number` (`number`) USING HASH;
 
 --
--- Индексы таблицы `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id_user`);
 
 --
--- AUTO_INCREMENT для сохранённых таблиц
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT для таблицы `calls`
+-- AUTO_INCREMENT for table `calls`
 --
 ALTER TABLE `calls`
-  MODIFY `id_call` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_call` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT для таблицы `doctor`
+-- AUTO_INCREMENT for table `doctor`
 --
 ALTER TABLE `doctor`
-  MODIFY `id_doctor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id_doctor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT для таблицы `drivers`
+-- AUTO_INCREMENT for table `drivers`
 --
 ALTER TABLE `drivers`
   MODIFY `id_drivers` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT для таблицы `orderly`
+-- AUTO_INCREMENT for table `orderly`
 --
 ALTER TABLE `orderly`
-  MODIFY `id_orderly` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_orderly` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT для таблицы `paramedic`
+-- AUTO_INCREMENT for table `paramedic`
 --
 ALTER TABLE `paramedic`
   MODIFY `id_paramedic` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT для таблицы `patient`
+-- AUTO_INCREMENT for table `patient`
 --
 ALTER TABLE `patient`
   MODIFY `id_patient` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT для таблицы `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- Ограничения внешнего ключа сохраненных таблиц
+-- Constraints for dumped tables
 --
 
 --
--- Ограничения внешнего ключа таблицы `calls`
+-- Constraints for table `calls`
 --
 ALTER TABLE `calls`
   ADD CONSTRAINT `calls_ibfk_1` FOREIGN KEY (`id_crew`) REFERENCES `crews` (`id_crew`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -296,7 +325,7 @@ ALTER TABLE `calls`
   ADD CONSTRAINT `calls_ibfk_3` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ограничения внешнего ключа таблицы `crews`
+-- Constraints for table `crews`
 --
 ALTER TABLE `crews`
   ADD CONSTRAINT `crews_ibfk_1` FOREIGN KEY (`id_doctor`) REFERENCES `doctor` (`id_doctor`) ON DELETE CASCADE ON UPDATE CASCADE,
