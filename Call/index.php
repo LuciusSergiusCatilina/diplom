@@ -21,7 +21,6 @@
                         <input type="datetime-local" id="startDate" name="startDate">
                         <label for="endDate">Конечная дата:</label>
                         <input type="datetime-local" id="endDate" name="endDate">
-                        <button onclick="filterByDate()">Применить фильтр</button>
                  </div>
                 </div>
                  <!-- /.box-header -->
@@ -57,22 +56,19 @@
 <script src = "../dist/js/datetimeSearch.js"></script>';
 <script>
  $(document).ready(function(){
-  console.log("ready");
+  //console.log("ready");
     $.ajax({
         type: "GET",
-        url: "../api/call/read.php", // Изменено на URL для чтения экипажей
+        url: "../api/call/read.php", 
         dataType: 'json',
         success: function(data) {
-          console.log(data);
+          //console.log(data);
 
             let response="";
             for(var call in data){
-                // let rawDate = new Date(data[call].time);
-                // let formattedDate = rawDate.getFullYear() + "-" + 
-                //     ('0' + (rawDate.getMonth() + 1)).slice(-2) + "-" + 
-                //     ('0' + rawDate.getDate()).slice(-2) + "T" + 
-                //     ('0' + rawDate.getHours()).slice(-2) + ":" + 
-                //     ('0' + rawDate.getMinutes()).slice(-2);
+                let date = new Date(data[call].time);
+                let formatDateTime =  new Intl.DateTimeFormat("ru", {dateStyle:"long", timeStyle:"short"}).format(date);
+                //console.log("fmd: ", formatDateTime);
                 response += "<tr>"+
                 "<td>"+data[call].id_call+"</td>"+
                 "<td>"+data[call].user_name+"</td>"+ 
@@ -80,7 +76,7 @@
                 "<td>"+data[call].adress+"</td>"+
                 "<td>"+data[call].number+"</td>"+
                 "<td>"+(data[call].patient_name ?? "Добавить позже")+"</td>"+
-                "<td>"+data[call].time+"</td>"+
+                "<td data-time = '" + date + "'>"+formatDateTime+"</td>"+
                 "<td>"+data[call].type+"</td>"+
                 "<td><a href='update.php?id="+data[call].id_call+"'>Изменить</a> | <a href='#' onClick=Remove('"+data[call].id_call+"')>Удалить</a></td>"+ 
                 "</tr>";
