@@ -167,8 +167,8 @@
               </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="/medibed/call/create.php">Добавить вызов</a></li>
-            <li><a href="/medibed/call">Список вызовов</a></li>
+            <li><a href="../call/create.php">Добавить вызов</a></li>
+            <li><a href="../call">Список вызовов</a></li>
           </ul>
         </li>
       </ul>
