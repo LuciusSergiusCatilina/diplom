@@ -101,8 +101,8 @@
               </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="/medibed/doctor/create.php">Добавить доктора</a></li>
-            <li><a href="/medibed/doctor">Список докторов</a></li>
+            <li><a href="../doctor/create.php">Добавить доктора</a></li>
+            <li><a href="../doctor">Список докторов</a></li>
           </ul>
         </li>
         <li class="treeview">
@@ -112,8 +112,8 @@
               </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="/medibed/patient/create.php">Добавить пациента</a></li>
-            <li><a href="/medibed/patient">Список пациентов</a></li>
+            <li><a href="../patient/create.php">Добавить пациента</a></li>
+            <li><a href="../patient">Список пациентов</a></li>
           </ul>
         </li>
         <li class="treeview">
@@ -123,8 +123,8 @@
               </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="/medibed/driver/create.php">Добавить водителя</a></li>
-            <li><a href="/medibed/driver">Список водителей</a></li>
+            <li><a href="../driver/create.php">Добавить водителя</a></li>
+            <li><a href="../driver">Список водителей</a></li>
           </ul>
         </li>
         <li class="treeview">
@@ -134,8 +134,8 @@
               </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="/medibed/paramedic/create.php">Добавить фельдшера</a></li>
-            <li><a href="/medibed/paramedic">Список фельдшеров</a></li>
+            <li><a href="../paramedic/create.php">Добавить фельдшера</a></li>
+            <li><a href="../paramedic">Список фельдшеров</a></li>
           </ul>
         </li>
         <li class="treeview">
@@ -145,8 +145,8 @@
               </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="/medibed/orderly/create.php">Добавить санитара</a></li>
-            <li><a href="/medibed/orderly">Список санитаров</a></li>
+            <li><a href="../orderly/create.php">Добавить санитара</a></li>
+            <li><a href="../orderly">Список санитаров</a></li>
           </ul>
         </li>
         <li class="treeview">
@@ -156,8 +156,8 @@
               </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="/medibed/crew/create.php">Добавить бригаду</a></li>
-            <li><a href="/medibed/crew">Список бригад</a></li>
+            <li><a href="../crew/create.php">Добавить бригаду</a></li>
+            <li><a href="../crew">Список бригад</a></li>
           </ul>
         </li>
         <li class="treeview">
