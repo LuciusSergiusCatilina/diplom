@@ -17,6 +17,11 @@
                              </span>
                          </div>
                      </form>
+                        <label for="startDate">Начальная дата:</label>
+                        <input type="datetime-local" id="startDate" name="startDate">
+                        <label for="endDate">Конечная дата:</label>
+                        <input type="datetime-local" id="endDate" name="endDate">
+                        <button onclick="filterByDate()">Применить фильтр</button>
                  </div>
                 </div>
                  <!-- /.box-header -->
@@ -43,11 +48,13 @@
                 </div>
                 <!-- /.box -->
               </div>
-            </div>
-            <script src = "../dist/js/searchBar.js"></script>';
+            </div>';
+
  include('../master.php');
 ?>
 <!-- page script -->
+<script src = "../dist/js/searchBar.js"></script>
+<script src = "../dist/js/datetimeSearch.js"></script>';
 <script>
  $(document).ready(function(){
   console.log("ready");
@@ -57,8 +64,15 @@
         dataType: 'json',
         success: function(data) {
           console.log(data);
-            var response="";
+
+            let response="";
             for(var call in data){
+                // let rawDate = new Date(data[call].time);
+                // let formattedDate = rawDate.getFullYear() + "-" + 
+                //     ('0' + (rawDate.getMonth() + 1)).slice(-2) + "-" + 
+                //     ('0' + rawDate.getDate()).slice(-2) + "T" + 
+                //     ('0' + rawDate.getHours()).slice(-2) + ":" + 
+                //     ('0' + rawDate.getMinutes()).slice(-2);
                 response += "<tr>"+
                 "<td>"+data[call].id_call+"</td>"+
                 "<td>"+data[call].user_name+"</td>"+ 
