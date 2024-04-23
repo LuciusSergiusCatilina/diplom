@@ -17,7 +17,7 @@
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
   <header class="main-header">
-    <a href="index.php" class="logo">
+    <a href="../Main" class="logo">
       <span class="logo-mini"><b>П</b>одстанция</span>
       <span class="logo-lg">Подстанция</span>
     </a>

@@ -1,25 +1,16 @@
 function printTable(tableName) {
-  // Создаем новое окно печати
   let printableWindow = window.open('', '_blank', 'width=800,height=600');
 
-  // Получаем содержимое таблицы
-  // let tableContent = document.getElementById(tableName).outerHTML;
-  // Получаем элемент таблицы
-let table = document.querySelector('table');
+  let table = document.querySelector('table');
 
-// Клонируем таблицу, чтобы не изменять оригинальный DOM
-let tableClone = table.cloneNode(true);
+  let tableClone = table.cloneNode(true);
 
-// Находим все ячейки заголовка с id="action" и удаляем их
-tableClone.querySelectorAll('th#action').forEach(cell => cell.remove());
+  tableClone.querySelectorAll('th#action').forEach(cell => cell.remove());
 
-// Находим все ячейки данных с id="action" и удаляем их
-tableClone.querySelectorAll('td#action').forEach(cell => cell.remove());
+  tableClone.querySelectorAll('td#action').forEach(cell => cell.remove());
 
-// Получаем HTML-код обновлённой таблицы
-let tableContent = tableClone.outerHTML;
-//console.log(tableContent);
-  // Генерируем HTML для нового окна печати
+  let tableContent = tableClone.outerHTML;
+
   let printableContent = `
   <!DOCTYPE html>
   <html lang="en">
