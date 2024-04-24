@@ -64,7 +64,7 @@ function UpdateParamedic(){
         success: function (result) {
             if (result['status'] == true) {
                 alert("Данные изменены!");
-                window.location.href = '/medibed/paramedic';
+                window.location.href = '../Paramedic';
             }
             else {
                 alert(result['message']);

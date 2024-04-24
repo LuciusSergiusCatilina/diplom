@@ -122,7 +122,7 @@ include('../master.php');
       success: function(result) {
         if (result['status'] == true) {
           alert("Данные экипажа обновлены!");
-          window.location.href = '/medibed/call';
+          window.location.href = '../Call';
         } else {
           alert(result['message']);
         }

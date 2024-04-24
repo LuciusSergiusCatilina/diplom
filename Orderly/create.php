@@ -49,7 +49,7 @@ function AddOrderly(){
         success: function (result) {
             if (result['status'] == true) {
                 alert("Новый санитар успешно добавлен!");
-                window.location.href = '/medibed/orderly'; // Изменено на '/medibed/orderly'
+                window.location.href = '../Orderly'; // Изменено на '/medibed/orderly'
             }
             else {
                 alert(result['message']);

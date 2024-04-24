@@ -53,7 +53,7 @@ function AddPatient(){
         success: function (result) {
             if (result['status'] == true) {
                 alert("Новый пациент успешно добавлен!");
-                window.location.href = '/medibed/patient';
+                window.location.href = '../Patient';
             }
             else {
                 alert(result['message']);

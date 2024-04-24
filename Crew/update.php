@@ -139,7 +139,7 @@
             success: function (result) {
                 if (result['status'] == true) {
                     alert("Данные экипажа обновлены!");
-                    window.location.href = '/medibed/crew';
+                    window.location.href = '../Crew';
                 }
                 else {
                     alert(result['message']);

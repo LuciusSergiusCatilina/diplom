@@ -49,14 +49,14 @@
  $(document).ready(function(){
     $.ajax({
         type: "GET",
-        url: "../api/crew/read.php", // Изменено на URL для чтения экипажей
+        url: "../api/crew/read.php", 
         dataType: 'json',
         success: function(data) {
             var response="";
             for(var crew in data){
                 response += "<tr>"+
                 "<td>"+data[crew].id_crew+"</td>"+
-                "<td>"+data[crew].driver_name+"</td>"+ // Предполагается, что имена членов экипажа возвращаются в ответе
+                "<td>"+data[crew].driver_name+"</td>"+ 
                 "<td>"+data[crew].doctor_name+"</td>"+
                 "<td>"+data[crew].orderly_name+"</td>"+
                 "<td>"+((data[crew].paramedic_name) ?? "Отсутствует")+"</td>"+
@@ -84,7 +84,7 @@
             success: function (result) {
                 if (result['status'] == true) {
                     alert("Экипаж успешно удалён");
-                    window.location.href = '/medibed/crew'; // Изменено на URL страницы экипажей
+                    window.location.href = '../Crew'; // Изменено на URL страницы экипажей
                 }
                 else {
                     alert(result['message']);

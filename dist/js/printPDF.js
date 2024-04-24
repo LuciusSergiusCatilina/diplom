@@ -1,7 +1,7 @@
 function printTable(tableName) {
   let printableWindow = window.open('', '_blank', 'width=800,height=600');
 
-  let table = document.querySelector('table');
+  let table = document.getElementById(tableName);
 
   let tableClone = table.cloneNode(true);
 
@@ -17,7 +17,7 @@ function printTable(tableName) {
   <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Таблица вызовов/title>
+      <title>Таблица вызовов</title>
       <style>
           body {
               padding: 20px;

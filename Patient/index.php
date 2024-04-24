@@ -81,7 +81,7 @@ function Remove(id){
             success: function (result) {
                 if (result['status'] == true) {
                     alert("Пациент успешно удалён");
-                    window.location.href = '/medibed/patient'; // Изменено на '/medibed/patient'
+                    window.location.href = '../Patient'; // Изменено на '/medibed/patient'
                 }
                 else {
                     alert(result['message']);

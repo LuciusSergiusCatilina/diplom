@@ -115,7 +115,7 @@
             success: function (result) {
                 if (result['status'] == true) {
                     alert("Вызов успешно удалён");
-                    window.location.href = '/medibed/call'; // Изменено на URL страницы экипажей
+                    window.location.href = '../Call'; // Изменено на URL страницы экипажей
                 }
                 else {
                     alert(result['message']);

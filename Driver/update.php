@@ -64,7 +64,7 @@ function UpdateDriver(){
         success: function (result) {
             if (result['status'] == true) {
                 alert("Данные изменены!");
-                window.location.href = '/medibed/driver'; // Изменено на '/medibed/driver'
+                window.location.href = '../Driver'; // Изменено на '/medibed/driver'
             }
             else {
                 alert(result['message']);

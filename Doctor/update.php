@@ -60,8 +60,8 @@
             data: {
                 id: <?php echo $_GET['id']; ?>,
                 name: $("#name").val(),
-                number: $("#number").val(), // Изменено с "phone" на "number"
-                specialization: $("#specialization").val() // Изменено с "specialist" на "specialization"
+                number: $("#number").val(), 
+                specialization: $("#specialization").val() 
             },
             error: function (result) {
                 alert(result['message']);
@@ -69,7 +69,7 @@
             success: function (result) {
                 if (result['status'] == true) {
                     alert("Данные изменены!");
-                    window.location.href = '/medibed/doctor';
+                    window.location.href = '../Doctor';
                 }
                 else {
                     alert(result['message']);

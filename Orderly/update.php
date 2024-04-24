@@ -64,7 +64,7 @@ function UpdateOrderly(){
         success: function (result) {
             if (result['status'] == true) {
                 alert("Данные изменены!");
-                window.location.href = '/medibed/orderly';
+                window.location.href = '../Orderly';
             }
             else {
                 alert(result['message']);

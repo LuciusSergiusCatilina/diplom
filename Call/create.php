@@ -116,7 +116,7 @@ include('../master.php');
             window.location.href = result['redirectUrl'];
           } else {
             // Если URL для перенаправления не предоставлен, используйте заранее определенный URL
-            window.location.href = '/medibed/call';
+            window.location.href = '../Call';
           }
         } else {
           alert(result['message']);

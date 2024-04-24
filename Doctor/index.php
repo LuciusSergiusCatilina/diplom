@@ -28,7 +28,7 @@
                          <th>ФИО</th>
                          <th>Номер телефона</th>
                          <th>Специализация</th>
-                         <th>Действия</th>
+                         <th>Действия </th>                  
                      </tr>
                  </thead>
                  <tbody>
@@ -83,7 +83,7 @@
             success: function (result) {
                 if (result['status'] == true) {
                     alert("Врач успешно удалён");
-                    window.location.href = '/medibed/doctor';
+                    window.location.href = '../Doctor';
                 }
                 else {
                     alert(result['message']);

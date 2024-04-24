@@ -131,7 +131,7 @@ function AddCrew(){
                     window.location.href = result['redirectUrl'];
                 } else {
                     // Если URL для перенаправления не предоставлен, используйте заранее определенный URL
-                    window.location.href = '/medibed/crew';
+                    window.location.href = '../Crew';
                 }
             } else {
                 alert(result['message']);

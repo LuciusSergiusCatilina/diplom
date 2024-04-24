@@ -81,7 +81,7 @@ function Remove(id){
             success: function (result) {
                 if (result['status'] == true) {
                     alert("Санитар успешно удалён");
-                    window.location.href = '/medibed/orderly'; // Изменено на '/medibed/orderly'
+                    window.location.href = '../Orderly'; // Изменено на '/medibed/orderly'
                 }
                 else {
                     alert(result['message']);

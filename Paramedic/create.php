@@ -49,7 +49,7 @@ function AddParamedic(){
         success: function (result) {
             if (result['status'] == true) {
                 alert("Новый парамедик успешно добавлен!");
-                window.location.href = '/medibed/paramedic'; // Изменено на '/medibed/paramedic'
+                window.location.href = '../Paramedic'; // Изменено на '/medibed/paramedic'
             }
             else {
                 alert(result['message']);

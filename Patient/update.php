@@ -69,7 +69,7 @@ function UpdatePatient(){
         success: function (result) {
             if (result['status'] == true) {
                 alert("Данные изменены!");
-                window.location.href = '/medibed/patient';
+                window.location.href = '../Patient';
             }
             else {
                 alert(result['message']);
