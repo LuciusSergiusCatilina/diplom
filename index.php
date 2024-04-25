@@ -6,18 +6,18 @@
      <!-- Пример блока с общим количеством записей -->
      <div class="col-md-6 col-sm-6 col-xs-12">
        <div class="info-box">
-         <span class="info-box-icon bg-aqua"><i class="fa fa-book"></i></span>
+         <span class="info-box-icon bg-aqua"><i class="fa fa-file"></i></span>
          <div class="info-box-content">
-           <span class="info-box-text">Total Records</span>
+           <span class="info-box-text">Общее количество вызовов</span>
            <span class="info-box-number">150</span>
          </div>
        </div>
      </div>
      <div class="col-md-6 col-sm-6 col-xs-12">
        <div class="info-box">
-         <span class="info-box-icon bg-red"><i class="fa fa-book"></i></span>
+         <span class="info-box-icon bg-red"><i class="fa fa-wheelchair-alt"></i></span>
          <div class="info-box-content">
-           <span class="info-box-text">Total Records</span>
+           <span class="info-box-text">Общее количество пациентов</span>
            <span class="info-box-number">150</span>
          </div>
        </div>
@@ -30,13 +30,13 @@
        <div class="info-box bg-green">
          <span class="info-box-icon"><i class="fa fa-comments-o"></i></span>
          <div class="info-box-content">
-           <span class="info-box-text">Likes</span>
+           <span class="info-box-text">Консультаций</span>
            <span class="info-box-number">41,410</span>
            <div class="progress">
              <div class="progress-bar" style="width: 70%"></div>
            </div>
            <span class="progress-description">
-             70% Increase in 30 Days
+             42% в текущем месяце
            </span>
          </div>
        </div>
@@ -44,15 +44,15 @@
 
      <div class="col-md-6 col-sm-6 col-xs-12">
        <div class="info-box bg-yellow">
-         <span class="info-box-icon"><i class="fa fa-comments-o"></i></span>
+         <span class="info-box-icon"><i class="fa fa-ambulance"></i></span>
          <div class="info-box-content">
-           <span class="info-box-text">Likes</span>
+           <span class="info-box-text">Выездов бригад</span>
            <span class="info-box-number">41,410</span>
            <div class="progress">
              <div class="progress-bar" style="width: 70%"></div>
            </div>
            <span class="progress-description">
-             70% Increase in 30 Days
+            58% в текущем месяце
            </span>
          </div>
        </div>
@@ -64,7 +64,7 @@
      <div class="col-xs-12">
        <div class="box box-primary">
          <div class="box-header with-border">
-           <h3 class="box-title">Records Timeline</h3>
+           <h3 class="box-title">График вызовов по месяцам</h3>
          </div>
          <div class="box-body">
            <canvas id="recordsChart" width="200" height="100"></canvas>
@@ -124,7 +124,7 @@
       
 ';
 
- include('../master.php');
+ include('master.php');
 ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 <script>
@@ -132,9 +132,9 @@
   let myChart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      labels: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль'],
       datasets: [{
-        label: 'Number of Records',
+        label: 'Количество вызовов',
         data: [65, 59, 80, 81, 56, 55, 40],
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
         borderColor: 'rgba(54, 162, 235, 1)',

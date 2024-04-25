@@ -43,6 +43,7 @@ $content = '<div class="row">
                       <!-- /.box-body -->
                       <div class="box-footer">
                         <input type="button" class="btn btn-primary" onClick="AddCrew()" value="Добавить вызов"></input>
+                        <input type="button" class="btn btn-danger" onClick="window.history.back();" value="Назад"></input>
                       </div>
                     </form>
                  </div>
