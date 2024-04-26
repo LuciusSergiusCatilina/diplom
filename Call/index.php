@@ -46,7 +46,7 @@
                         <th>Пациент</th>
                         <th>Время вызова</th>
                         <th>Тип помощи</th>
-                        <th id ="action">Действия <button onclick="printTable(\'calls\')"class="btn btn-flat btn-sm pull-right"> <i class="fa fa-file-text-o "> </i> </button></th>
+                        <th id ="action">Действия <button title = "Печать таблицы" onclick="printTable(\'calls\')"class="btn btn-flat btn-sm pull-right"> <i class="fa fa-file-text-o "> </i> </button></th>
                     </tr>
                 </thead>
                 <tbody>

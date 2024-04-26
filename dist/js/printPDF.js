@@ -10,6 +10,12 @@ function printTable(tableName) {
   tableClone.querySelectorAll('td#action').forEach(cell => cell.remove());
 
   let tableContent = tableClone.outerHTML;
+  
+  let startDateInput = document.getElementById("startDate").value;
+  let endDateInput = document.getElementById("endDate").value;
+
+  let startDate = new Date(startDateInput);
+  let endDate = new Date(endDateInput);
 
   let printableContent = `
   <!DOCTYPE html>
@@ -72,6 +78,7 @@ function printTable(tableName) {
       </style>
   </head>
   <body>
+  <h2>Записи в период с ${startDate} до ${endDate}</h2>
           ${tableContent}
   </body>
   </html>

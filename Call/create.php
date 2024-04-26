@@ -14,7 +14,7 @@ $content = '<div class="row">
                       <div class="form-group">
                       <label for="type">Тип помощи</label>
                       <select class="form-control" id="type">
-                      <option value = "Консультация">Консультация</option>
+                      <option selected value = "Консультация" >Консультация</option>
                       <option value = "Вызов бригады">Вызов бригады</option>
                       </select>
                     </div>
@@ -53,9 +53,8 @@ $content = '<div class="row">
 include('../master.php');
 ?>
 <script>
-  //сделать так, чтобы на change тип помощи == "консультация" select с номером бригады блокировался и устанавливался в значение бригада не требуется 
-  //и при этом если была вызвана бригада, то option бригада не требуется удаляется из выборов"
   $(document).ready(function() {
+    checkCrew("type","crew");
     $.ajax({
       type: "GET",
       url: "../api/call/getCrews.php",
@@ -82,6 +81,10 @@ include('../master.php');
         }
         $("#patient").html(options);
       }
+    });
+
+    $("#type").change(function(){
+      checkCrew("type","crew");
     });
   });
 
@@ -124,5 +127,19 @@ include('../master.php');
         }
       }
     });
+  }
+  function checkCrew(type, crew){
+    let selectedType = $(`#${type}`).val();
+      console.log(selectedType);
+    let selectedCrew = $(`#${crew}`);
+    if (selectedType === "Консультация"){
+      selectedCrew.prop("disabled", true);
+      selectedCrew[0].selectedIndex = 0;
+    }
+    else if (selectedType === "Вызов бригады"){
+      selectedCrew.prop("disabled", false);
+      
+    }
+    
   }
 </script>

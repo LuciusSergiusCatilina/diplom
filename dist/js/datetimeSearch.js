@@ -3,8 +3,8 @@ function filterByDate() {
   let endDateInput = document.getElementById("endDate").value;
   //console.log("sdi: " + startDateInput);
 
-  let startDate = new Date(startDateInput);
-  let endDate = new Date(endDateInput);
+  let startDate = new Date(startDateInput).toLocaleDateString('ru-RU');;
+  let endDate = new Date(endDateInput).toLocaleDateString('ru-RU');;
   //console.log("sd: " + startDate);
 
   var tableRows = document.getElementById("calls").getElementsByTagName("tr");
