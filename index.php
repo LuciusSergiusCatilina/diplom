@@ -9,7 +9,7 @@
          <span class="info-box-icon bg-aqua"><i class="fa fa-file"></i></span>
          <div class="info-box-content">
            <span class="info-box-text">Общее количество вызовов</span>
-           <span class="info-box-number">150</span>
+           <span class="info-box-number" id = "countCalls"></span>
          </div>
        </div>
      </div>
@@ -18,7 +18,7 @@
          <span class="info-box-icon bg-red"><i class="fa fa-wheelchair-alt"></i></span>
          <div class="info-box-content">
            <span class="info-box-text">Общее количество пациентов</span>
-           <span class="info-box-number">150</span>
+           <span class="info-box-number" id = "countPatients"></span>
          </div>
        </div>
      </div>
@@ -31,12 +31,11 @@
          <span class="info-box-icon"><i class="fa fa-comments-o"></i></span>
          <div class="info-box-content">
            <span class="info-box-text">Консультаций</span>
-           <span class="info-box-number">41,410</span>
+           <span class="info-box-number" id ="countConsultations"></span>
            <div class="progress">
-             <div class="progress-bar" style="width: 70%"></div>
+             <div class="progress-bar" style="width: 70%" id ="countConsultationsProcentBar"></div>
            </div>
-           <span class="progress-description">
-             42% в текущем месяце
+           <span class="progress-description" id ="countConsultationsProcent">
            </span>
          </div>
        </div>
@@ -47,7 +46,7 @@
          <span class="info-box-icon"><i class="fa fa-ambulance"></i></span>
          <div class="info-box-content">
            <span class="info-box-text">Выездов бригад</span>
-           <span class="info-box-number">41,410</span>
+           <span class="info-box-number" id ="сountDepartures"></span>
            <div class="progress">
              <div class="progress-bar" style="width: 70%"></div>
            </div>
@@ -153,6 +152,12 @@
     }
   });
 
+  //вычисление процентов
+
+  let countCalls;
+
+  let consultationProcent = document.getElementById("countConsultationsProcent");
+
   $(document).ready(function(){
     $.ajax({
         type: "GET",
@@ -172,5 +177,46 @@
             $(response).appendTo($("#crews tbody")); 
         }
     }); 
- });
+    $.ajax({
+        type: "GET",
+        url: "../api/call/getCount.php", 
+        dataType: 'json',
+        success: function(data) {
+            $("#countCalls").text(data); 
+        }
+    }); 
+    $.ajax({
+        type: "GET",
+        url: "../api/patient/getCount.php", 
+        dataType: 'json',
+        success: function(data) {
+            $("#countPatients").text(data); 
+        }
+    }); 
+
+    $.ajax({
+        type: "GET",
+        url: "../api/call/getCountConsultations.php", 
+        dataType: 'json',
+        success: function(data) {
+            $("#countConsultations").text(data); 
+        }
+    }); 
+
+    $.ajax({
+        type: "GET",
+        url: "../api/call/getCountDepartures.php", 
+        dataType: 'json',
+        success: function(data) {
+            $("#сountDepartures").text(data); 
+        }
+    }); 
+
+
+
+
+
+});
+
+
 </script>

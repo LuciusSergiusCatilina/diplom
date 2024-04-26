@@ -127,4 +127,11 @@ class Patient{
         return false;
     }
     }
+
+    function getCount(){
+        $query = "SELECT COUNT(*) FROM " . $this->table_name;
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchColumn();         
+      }
 }

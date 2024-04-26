@@ -161,4 +161,25 @@ function update()
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
+  function getCount(){
+    $query = "SELECT COUNT(*) FROM calls";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchColumn();         
+  }
+
+  function getCountConsultations(){
+    $query = "SELECT COUNT(*) FROM calls WHERE type ='Консультация'";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchColumn();         
+  }
+
+  function getCountDepartures(){
+    $query = "SELECT COUNT(*) FROM calls WHERE type ='Вызов бригады'";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchColumn();         
+  }
+
 }
