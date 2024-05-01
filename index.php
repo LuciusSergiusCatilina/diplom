@@ -1,5 +1,5 @@
 <?php
- $content = '
+$content = '
  <div class="row">
  <div class="col-md-6">
    <div class="row">
@@ -48,10 +48,9 @@
            <span class="info-box-text">Выездов бригад</span>
            <span class="info-box-number" id ="сountDepartures"></span>
            <div class="progress">
-             <div class="progress-bar" style="width: 70%"></div>
+             <div class="progress-bar" style="width: 70%" id = "countCallsProcentBar"></div>
            </div>
-           <span class="progress-description">
-            58% в текущем месяце
+           <span class="progress-description" id ="countCallsProcent">
            </span>
          </div>
        </div>
@@ -123,100 +122,118 @@
       
 ';
 
- include('master.php');
+include 'master.php';
 ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 <script>
-  let ctx = document.getElementById('recordsChart').getContext('2d');
-  let myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль'],
-      datasets: [{
-        label: 'Количество вызовов',
-        data: [65, 59, 80, 81, 56, 55, 40],
-        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 2,
-      }]
-    },
-    options: {
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true,
-            stepSize: 10
-          }
-        }]
-      }
-    }
-  });
-
-  //вычисление процентов
-
-  let countCalls;
-
-  let consultationProcent = document.getElementById("countConsultationsProcent");
-
-  $(document).ready(function(){
-    $.ajax({
-        type: "GET",
-        url: "../api/crew/read.php", 
-        dataType: 'json',
-        success: function(data) {
-            var response="";
-            for(var crew in data){
-                response += "<tr>"+
-                "<td>"+data[crew].id_crew+"</td>"+
-                "<td>"+data[crew].driver_name+"</td>"+ 
-                "<td>"+data[crew].doctor_name+"</td>"+
-                "<td>"+data[crew].orderly_name+"</td>"+
-                "<td>"+((data[crew].paramedic_name) ?? "Отсутствует")+"</td>"+
-                "</tr>";
+    $(document).ready(function() {
+        $.ajax({
+            type: "GET",
+            url: "../api/crew/read.php",
+            dataType: 'json',
+            success: function(data) {
+                var response = "";
+                for (var crew in data) {
+                    response += "<tr>" +
+                        "<td>" + data[crew].id_crew + "</td>" +
+                        "<td>" + data[crew].driver_name + "</td>" +
+                        "<td>" + data[crew].doctor_name + "</td>" +
+                        "<td>" + data[crew].orderly_name + "</td>" +
+                        "<td>" + ((data[crew].paramedic_name) ?? "Отсутствует") + "</td>" +
+                        "</tr>";
+                }
+                $(response).appendTo($("#crews tbody"));
             }
-            $(response).appendTo($("#crews tbody")); 
-        }
-    }); 
-    $.ajax({
-        type: "GET",
-        url: "../api/call/getCount.php", 
-        dataType: 'json',
-        success: function(data) {
-            $("#countCalls").text(data); 
-        }
-    }); 
-    $.ajax({
-        type: "GET",
-        url: "../api/patient/getCount.php", 
-        dataType: 'json',
-        success: function(data) {
-            $("#countPatients").text(data); 
-        }
-    }); 
+        });
+        $.ajax({
+            type: "GET",
+            url: "../api/call/getCount.php",
+            dataType: 'json',
+            success: function(data) {
+                $("#countCalls").text(data);
 
-    $.ajax({
-        type: "GET",
-        url: "../api/call/getCountConsultations.php", 
-        dataType: 'json',
-        success: function(data) {
-            $("#countConsultations").text(data); 
-        }
-    }); 
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "../api/patient/getCount.php",
+            dataType: 'json',
+            success: function(data) {
+                $("#countPatients").text(data);
+            }
+        });
 
-    $.ajax({
-        type: "GET",
-        url: "../api/call/getCountDepartures.php", 
-        dataType: 'json',
-        success: function(data) {
-            $("#сountDepartures").text(data); 
-        }
-    }); 
+        $.ajax({
+            type: "GET",
+            url: "../api/call/getCountConsultations.php",
+            dataType: 'json',
+            success: function(data) {
+                $("#countConsultations").text(data);
+            }
+        });
 
+        $.ajax({
+            type: "GET",
+            url: "../api/call/getCountDepartures.php",
+            dataType: 'json',
+            success: function(data) {
+                $("#сountDepartures").text(data);
+            }
+        });
 
+        $.ajax({
+            type: "GET",
+            url: "../api/call/getStats.php",
+            dataType: 'json',
+            success: function(data) {
+                let consultationsProcent = data * 100;
+                let callsProcent = 100 - consultationsProcent;
 
+                $("#countConsultationsProcent").text(consultationsProcent + "% в текущем месяце");
+                $("#countConsultationsProcentBar").width(consultationsProcent + "%");
 
+                $("#countCallsProcent").text(callsProcent + "% в текущем месяце");
+                $("#countCallsProcentBar").width(callsProcent + "%")
+            }
+        });
 
-});
+        $.ajax({
+            type: "GET",
+            url: "../api/call/getDates.php",
+            dataType: 'json',
+            success: function(data) {
+              let labels = [];
+              let dataset = [];
+                for (var item in data){
+                  labels.push(data[item].month_name + " " + data[item].year);
+                  dataset.push(data[item].calls_count);
+                }
+                let ctx = document.getElementById('recordsChart').getContext('2d');
+                let myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Количество вызовов',
+                            data: dataset,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 2,
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    stepSize: 2
+                                }
+                            }]
+                        }
+                    }
+                });
+            }
+        });
 
-
+    });
 </script>

@@ -182,4 +182,30 @@ function update()
     return $stmt->fetchColumn();         
   }
 
+  function getStats(){
+    $countCalls = $this->getCount();
+    $countConsultations = $this->getCountConsultations();
+    return $countConsultations / $countCalls;
+  }
+
+  function getDates(){
+    
+    $query = "SELECT 
+    MONTHNAME(`time`) AS month_name,
+    YEAR(`time`) AS year,
+    COUNT(*) AS calls_count
+    FROM 
+    calls
+    GROUP BY 
+    YEAR(`time`), MONTH(`time`)
+    ORDER BY 
+    year ASC, MONTH(`time`) ASC;";
+
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  }
+
 }
