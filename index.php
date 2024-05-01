@@ -126,6 +126,20 @@ include 'master.php';
 ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 <script>
+                const ruDates = {
+                  "January": "Январь",
+                  "February": "Февраль",
+                  "March": "Март",
+                  "April": "Апрель",
+                  "May": "Май",
+                  "June": "Июнь",
+                  "July": "Июль",
+                  "August": "Август",
+                  "September": "Сентябрь",
+                  "October": "Октябрь",
+                  "November": "Ноябрь",
+                  "December": "Декабрь"
+              };
     $(document).ready(function() {
         $.ajax({
             type: "GET",
@@ -186,13 +200,13 @@ include 'master.php';
             url: "../api/call/getStats.php",
             dataType: 'json',
             success: function(data) {
-                let consultationsProcent = data * 100;
-                let callsProcent = 100 - consultationsProcent;
+                let consultationsProcent = (data * 100).toFixed(0);
+                let callsProcent = (100 - consultationsProcent);
 
-                $("#countConsultationsProcent").text(consultationsProcent + "% в текущем месяце");
+                $("#countConsultationsProcent").text(consultationsProcent + "% от общего числа вызовов");
                 $("#countConsultationsProcentBar").width(consultationsProcent + "%");
 
-                $("#countCallsProcent").text(callsProcent + "% в текущем месяце");
+                $("#countCallsProcent").text(callsProcent + "% от общего числа вызовов");
                 $("#countCallsProcentBar").width(callsProcent + "%")
             }
         });
@@ -202,12 +216,14 @@ include 'master.php';
             url: "../api/call/getDates.php",
             dataType: 'json',
             success: function(data) {
+
               let labels = [];
               let dataset = [];
                 for (var item in data){
-                  labels.push(data[item].month_name + " " + data[item].year);
+                  labels.push(ruDates[data[item].month_name] + " " + data[item].year);
                   dataset.push(data[item].calls_count);
                 }
+
                 let ctx = document.getElementById('recordsChart').getContext('2d');
                 let myChart = new Chart(ctx, {
                     type: 'line',
