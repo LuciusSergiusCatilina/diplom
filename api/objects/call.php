@@ -191,15 +191,17 @@ function update()
   function getDates(){
     
     $query = "SELECT 
-    MONTHNAME(`time`) AS month_name,
     YEAR(`time`) AS year,
+    MONTHNAME(`time`) AS month_name,
     COUNT(*) AS calls_count
-    FROM 
+FROM 
     calls
-    GROUP BY 
-    YEAR(`time`), MONTH(`time`)
-    ORDER BY 
-    year ASC, MONTH(`time`) ASC;";
+GROUP BY 
+    year, month_name
+ORDER BY 
+    year ASC
+LIMIT 0, 50;
+";
 
     $stmt = $this->conn->prepare($query);
     $stmt->execute();

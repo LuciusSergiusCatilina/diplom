@@ -14,8 +14,8 @@ $content = '<div class="row">
                       <div class="form-group">
                       <label for="type">Тип помощи</label>
                       <select class="form-control" id="type">
-                      <option selected value = "Консультация" >Консультация</option>
-                      <option value = "Вызов бригады">Вызов бригады</option>
+                      <option value = "Консультация" >Консультация</option>
+                      <option value = "Вызов бригады" selected>Вызов бригады</option>
                       </select>
                     </div>
                       <div class="form-group">
@@ -42,7 +42,7 @@ $content = '<div class="row">
                       </div>
                       <!-- /.box-body -->
                       <div class="box-footer">
-                        <input type="button" class="btn btn-primary" onClick="AddCrew()" value="Добавить вызов"></input>
+                        <input type="submit" class="btn btn-primary" onClick="AddCrew()" value="Добавить вызов"></input>
                         <input type="button" class="btn btn-danger" onClick="window.history.back();" value="Назад"></input>
                       </div>
                     </form>
@@ -54,7 +54,7 @@ include('../master.php');
 ?>
 <script>
   $(document).ready(function() {
-    checkCrew("type","crew");
+
     $.ajax({
       type: "GET",
       url: "../api/call/getCrews.php",
@@ -66,6 +66,8 @@ include('../master.php');
           options += "<option value='" + data[i].id_crew + "'>" + data[i].id_crew + "</option>";
         }
         $("#crew").html(options);
+        console.log("сгенерировались все опшены");
+        checkCrew("type","crew");
       }
     });
 
@@ -83,12 +85,14 @@ include('../master.php');
       }
     });
 
-    $("#type").change(function(){
+
+
+  });
+  $("#type").change(function(){
       checkCrew("type","crew");
     });
-  });
 
-  function AddCrew() {
+  function AddCrew(event) {
     $.ajax({
       type: "POST",
       url: '../api/call/create.php',
@@ -106,13 +110,6 @@ include('../master.php');
         alert("Произошла ошибка при добавлении вызова. Пожалуйста, попробуйте еще раз.");
       },
       success: function(result) {
-        console.log({
-        id_crew: $('#crew').val(),
-        type: $("#type").val(),
-        id_patient: $('#patient').val(),
-        adress: $("#adress").val(),
-        number: $("#phone").val() 
-        });
         if (result['status'] == true) {
           alert("Вызов успешно добавлен!");
           // Предполагается, что сервер возвращает URL для перенаправления
@@ -129,14 +126,25 @@ include('../master.php');
     });
   }
   function checkCrew(type, crew){
+    console.log("check")
     let selectedType = $(`#${type}`).val();
-      console.log(selectedType);
+    console.log(selectedType);
     let selectedCrew = $(`#${crew}`);
+    let consultationOption = document.createElement("option");
+    let crewSelect = document.getElementById("crew");
+    consultationOption.text = "Бригада не требуется";
+    consultationOption.value = "";
     if (selectedType === "Консультация"){
+      console.log("check Консультации")
+      // if (crewSelect.options[0].text !== "Бригада не требуется"){
+      //       selectedCrew.prepend(consultationOption);  
+      // }
       selectedCrew.prop("disabled", true);
       selectedCrew[0].selectedIndex = 0;
     }
     else if (selectedType === "Вызов бригады"){
+      let optionToRemove = crewSelect.options[0];
+      crewSelect.remove(optionToRemove); 
       selectedCrew.prop("disabled", false);
       
     }

@@ -216,13 +216,14 @@ include 'master.php';
             url: "../api/call/getDates.php",
             dataType: 'json',
             success: function(data) {
-
+              console.log("succsess")
               let labels = [];
               let dataset = [];
                 for (var item in data){
                   labels.push(ruDates[data[item].month_name] + " " + data[item].year);
                   dataset.push(data[item].calls_count);
                 }
+                console.log(dataset);
 
                 let ctx = document.getElementById('recordsChart').getContext('2d');
                 let myChart = new Chart(ctx, {
