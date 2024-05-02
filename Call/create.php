@@ -43,7 +43,7 @@ $content = '<div class="row">
                       <!-- /.box-body -->
                       <div class="box-footer">
                         <input type="submit" class="btn btn-primary" onClick="AddCrew()" value="Добавить вызов"></input>
-                        <input type="button" class="btn btn-danger" onClick="window.history.back();" value="Назад"></input>
+                        <input type="button" class="btn btn-danger" onClick="window.location.href = `../Call` " value="Назад"></input>
                       </div>
                     </form>
                  </div>
@@ -92,7 +92,7 @@ include('../master.php');
       checkCrew("type","crew");
     });
 
-  function AddCrew(event) {
+  function AddCrew() {
     $.ajax({
       type: "POST",
       url: '../api/call/create.php',
@@ -112,13 +112,7 @@ include('../master.php');
       success: function(result) {
         if (result['status'] == true) {
           alert("Вызов успешно добавлен!");
-          // Предполагается, что сервер возвращает URL для перенаправления
-          if (result['redirectUrl']) {
-            window.location.href = result['redirectUrl'];
-          } else {
-            // Если URL для перенаправления не предоставлен, используйте заранее определенный URL
-            window.location.href = '../Call';
-          }
+            window.location.href = `../Call`;
         } else {
           alert(result['message']);
         }
@@ -135,10 +129,10 @@ include('../master.php');
     consultationOption.text = "Бригада не требуется";
     consultationOption.value = "";
     if (selectedType === "Консультация"){
-      console.log("check Консультации")
-      // if (crewSelect.options[0].text !== "Бригада не требуется"){
-      //       selectedCrew.prepend(consultationOption);  
-      // }
+      console.log(crewSelect.options[0].text)
+       if (crewSelect.options[0].text !== "Бригада не требуется"){
+             selectedCrew.prepend(consultationOption);  
+       }
       selectedCrew.prop("disabled", true);
       selectedCrew[0].selectedIndex = 0;
     }
