@@ -66,7 +66,6 @@ include('../master.php');
           options += "<option value='" + data[i].id_crew + "'>" + data[i].id_crew + "</option>";
         }
         $("#crew").html(options);
-        console.log("сгенерировались все опшены");
         checkCrew("type","crew");
       }
     });
@@ -112,7 +111,7 @@ include('../master.php');
       success: function(result) {
         if (result['status'] == true) {
           alert("Вызов успешно добавлен!");
-            window.location.href = `../Call`;
+            //window.location.href = `../Call`;
         } else {
           alert(result['message']);
         }

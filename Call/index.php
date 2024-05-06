@@ -55,7 +55,7 @@
         </div>
         <!-- /.box-body -->
         <div class="box-footer">
-            <button id="add_button" class="btn btn-flat btn-sm pull-right"><a style = "color: inherit" href="../call/create.php">Добавить вызов</a></button>
+            <button id="add_button" class="btn btn-flat btn-sm pull-right"><a style = "color: inherit" href="../Call/create.php">Добавить вызов</a></button>
         </div>
     </div>
 </div>
