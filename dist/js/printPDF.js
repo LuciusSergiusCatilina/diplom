@@ -78,7 +78,7 @@ function printTable(tableName) {
         </style>
     </head>
     <body>
-    ${(startDate) || (endDate) ? `<h2>Записи в период с ${startDate ?? ""} до ${endDate ?? ""}</h2>` : ""}
+    ${startDateInput || endDateInput ? `<h2>Записи в период с ${startDate ?? ""} до ${endDate ?? ""}</h2>` : ""}
     ${tableContent}
     </body>
     </html>

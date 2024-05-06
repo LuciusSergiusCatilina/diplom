@@ -6,12 +6,13 @@ function filterByDate() {
   let endDate = new Date(endDateInput).toLocaleDateString('ru-RU');
 
   var tableRows = document.getElementById("calls").getElementsByTagName("tr");
-  for (let i = 1; i < tableRows.length; i++) {
+  for (let i = 1; i < tableRows.length +1; i++) {
     let rowDateText = tableRows[i].getElementsByTagName("td")[6].getAttribute("data-time");
     let rowDate = new Date(rowDateText).toLocaleDateString('ru-RU');
 
-    //console.log(rowDate, " | ", startDate, " | ", endDate);
-    if (rowDate < startDate || rowDate > endDate) {
+    console.log(rowDate, " | ", startDate, " | ", endDate);
+    console.log(rowDate < startDate, " | ", rowDate > endDate);
+    if (new Date(rowDateText) < new Date(startDateInput) || new Date(rowDateText) > new Date(endDateInput)) {
       tableRows[i].style.display = "none";
     } else {
       tableRows[i].style.display = "";
