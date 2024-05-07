@@ -35,7 +35,7 @@ $content = '<div class="row">
                         <input required type="text" class="form-control" id="adress" placeholder="Введите адрес" >
                         </div>
                         <div class="form-group">
-                        <label for="adress">Номер телефона</label>
+                        <label for="phone">Номер телефона</label>
                         <input required type="tel" class="form-control" id="phone" placeholder="+79001114455" maxlength = 11>
                         </div>
 
@@ -53,8 +53,8 @@ $content = '<div class="row">
 include('../master.php');
 ?>
 <script>
-  $(document).ready(function() {
 
+  $(document).ready(function() {
     $.ajax({
       type: "GET",
       url: "../api/call/getCrews.php",
@@ -106,12 +106,17 @@ include('../master.php');
       error: function(jqXHR, textStatus, errorThrown) {
         console.error("Ошибка в функции AddCall():", textStatus, errorThrown);
         console.log("Полученные данные:", jqXHR.responseText);
+        console.log($('#crew').val());
+        console.log($("#type").val());
+        console.log($('#patient').val());
+        console.log($("#adress").val());
+        console.log($("#phone").val());
         alert("Произошла ошибка при добавлении вызова. Пожалуйста, попробуйте еще раз.");
       },
       success: function(result) {
         if (result['status'] == true) {
           alert("Вызов успешно добавлен!");
-            //window.location.href = `../Call`;
+            window.location.href = `../Call`;
         } else {
           alert(result['message']);
         }

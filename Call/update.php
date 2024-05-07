@@ -64,9 +64,6 @@ include('../master.php');
         $('#patient').val(data['id_patient']);
         $('#adress').val(data['adress']);
         $('#phone').val(data['number']);
-
-        // Теперь, когда данные о вызове успешно получены и заполнены в форме, выполняем запросы на получение данных об экипажах и пациентах
-        
       },
       error: function(result) {
         console.log(result);
@@ -84,7 +81,9 @@ include('../master.php');
       for (var i = 0; i < data.length; i++) {
         options += "<option value='" + data[i].id_crew + "'>" + data[i].id_crew + "</option>";
       }
+      
       $("#crew").html(options);
+      checkCrew("type","crew");
     }
   });
 
@@ -128,5 +127,34 @@ include('../master.php');
         }
       }
     });
+  }
+  $("#type").change(function(){
+      checkCrew("type","crew");
+    });
+
+  function checkCrew(type, crew){
+    console.log("check")
+    let selectedType = $(`#${type}`).val();
+    console.log(selectedType);
+    let selectedCrew = $(`#${crew}`);
+    let consultationOption = document.createElement("option");
+    let crewSelect = document.getElementById("crew");
+    consultationOption.text = "Бригада не требуется";
+    consultationOption.value = "";
+    if (selectedType === "Консультация"){
+      console.log(crewSelect.options[0].text)
+       if (crewSelect.options[0].text !== "Бригада не требуется"){
+             selectedCrew.prepend(consultationOption);  
+       }
+      selectedCrew.prop("disabled", true);
+      selectedCrew[0].selectedIndex = 0;
+    }
+    else if (selectedType === "Вызов бригады"){
+      let optionToRemove = crewSelect.options[0];
+      crewSelect.remove(optionToRemove); 
+      selectedCrew.prop("disabled", false);
+      
+    }
+    
   }
 </script>

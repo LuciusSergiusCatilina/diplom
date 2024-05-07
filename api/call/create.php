@@ -1,15 +1,12 @@
 <?php
  
 include_once '../config/database.php';
-include_once '../objects/call.php'; // Изменено на call.php
+include_once '../objects/call.php'; 
 $database = new Database();
 $db = $database->getConnection();
  
-$call = new Call($db); // Изменено на Call
+$call = new Call($db); 
  
-// Предполагается, что данные для создания вызова получены из формы или другого источника
-//$call->id_call = $_POST['id_call'];
-//$call->id_user = $_POST['id_user'];
 $call->id_crew = ($_POST['id_crew'] == '') ? null : $_POST['id_crew'];
 $call->id_patient = ($_POST['id_patient'] == '') ? null : $_POST['id_patient'];
 $call->adress = $_POST['adress'];

@@ -66,21 +66,18 @@ class Call
   {
     try {
       // query to insert record
-      $query = 'INSERT INTO ' . $this->table_name . ' (`id_crew`, `id_patient`, `adress`, `number`, `type`) VALUES (?, ?, ?, ?, ?)';
+      $query = 'INSERT INTO ' . $this->table_name . '(`id_crew`, `id_patient`, `adress`, `number`, `type`) VALUES (?, ?, ?, ?, ?)';
 
       // prepare query
       $stmt = $this->conn->prepare($query);
 
-      // bind values
-      //$stmt->bindParam(1, $this->id_call);
-      //$stmt->bindParam(2, $this->id_user);
+
       $stmt->bindParam(1, $this->id_crew);
       $stmt->bindParam(2, $this->id_patient);
       $stmt->bindParam(3, $this->adress);
       $stmt->bindParam(4, $this->number);
       $stmt->bindParam(5, $this->type);
 
-      // execute query
       if ($stmt->execute()) {
         return true;
       }
@@ -200,8 +197,7 @@ GROUP BY
     year, month_name
 ORDER BY 
     year ASC
-LIMIT 0, 50;
-";
+LIMIT 0, 50";
 
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
