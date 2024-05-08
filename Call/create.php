@@ -42,7 +42,7 @@ $content = '<div class="row">
                       </div>
                       <!-- /.box-body -->
                       <div class="box-footer">
-                        <input type="submit" class="btn btn-primary" onClick="AddCrew()" value="Добавить вызов"></input>
+                        <input type="submit" class="btn btn-primary" onclick="AddCrew(event)" value="Добавить вызов"></input>
                         <input type="button" class="btn btn-danger" onClick="window.location.href = `../Call` " value="Назад"></input>
                       </div>
                     </form>
@@ -91,38 +91,43 @@ include('../master.php');
       checkCrew("type","crew");
     });
 
-  function AddCrew() {
-    $.ajax({
-      type: "POST",
-      url: '../api/call/create.php',
-      dataType: 'json',
-      data: {
-        id_crew: $('#crew').val(),
-        type: $("#type").val(),
-        id_patient: $('#patient').val(),
+    function AddCrew(event){
+      event.preventDefault();
+
+$.ajax({
+    type: "POST",
+    url: '../api/call/create.php',
+    dataType: 'json',
+    data: {
+        type: $('#type').val(),
+        id_crew: $("#crew").val(),
+        id_patient: $("#patient").val(),
         adress: $("#adress").val(),
-        number: $("#phone").val()
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
+        phone: $("#phone").val()
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
         console.error("Ошибка в функции AddCall():", textStatus, errorThrown);
         console.log("Полученные данные:", jqXHR.responseText);
-        console.log($('#crew').val());
-        console.log($("#type").val());
-        console.log($('#patient').val());
-        console.log($("#adress").val());
-        console.log($("#phone").val());
-        alert("Произошла ошибка при добавлении вызова. Пожалуйста, попробуйте еще раз.");
-      },
-      success: function(result) {
+        alert("Произошла ошибка при добавлении экипажа. Пожалуйста, попробуйте еще раз.");
+    },
+    success: function (result) {
         if (result['status'] == true) {
-          alert("Вызов успешно добавлен!");
-            window.location.href = `../Call`;
+            alert("Вызов успешно добавлен!");
+            // Предполагается, что сервер возвращает URL для перенаправления
+            if (result['redirectUrl']) {
+                window.location.href = result['redirectUrl'];
+            } else {
+                // Если URL для перенаправления не предоставлен, используйте заранее определенный URL
+                window.location.href = '../Call';
+            }
         } else {
-          alert(result['message']);
+            alert(result['message']);
         }
-      }
-    });
-  }
+    }
+});
+}
+
+
   function checkCrew(type, crew){
     console.log("check")
     let selectedType = $(`#${type}`).val();
@@ -144,7 +149,6 @@ include('../master.php');
       let optionToRemove = crewSelect.options[0];
       crewSelect.remove(optionToRemove); 
       selectedCrew.prop("disabled", false);
-      
     }
     
   }
