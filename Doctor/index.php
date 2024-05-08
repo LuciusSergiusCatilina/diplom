@@ -1,5 +1,6 @@
 <?php
- $content = '<div class="row">
+ $content = '
+ <div class="row">
  <div class="col-xs-12">
      <div class="box">
          <div class="box-header">
@@ -10,10 +11,9 @@
                  <div class="col-xs-3">
                      <form action="#" method="get" class="pull-right">
                          <div class="input-group">
-                         <input type="text" name="search" id = "search" class="form-control input-sm" onkeyup="searchFunction(\'doctors\')" placeholder="Поиск">
+                             <input type="text" name="search" id="search" class="form-control input-sm" onkeyup="searchFunction(`doctors`)" placeholder="Поиск">
                              <span class="input-group-btn">
-                                 <button type="submit" name="search" id="search-btn" class="btn btn-flat btn-sm"><i class="fa fa-search"></i>
-                                 </button>
+                                 <button type="submit" name="search" id="search-btn" class="btn btn-flat btn-sm"><i class="fa fa-search"></i></button>
                              </span>
                          </div>
                      </form>
@@ -21,17 +21,18 @@
              </div>
          </div>
          <!-- /.box-header -->
-         <div class="box-body">
+         <div class="box-body table-responsive">
              <table id="doctors" class="table table-bordered table-hover">
                  <thead>
                      <tr>
                          <th>ФИО</th>
                          <th>Номер телефона</th>
                          <th>Специализация</th>
-                         <th>Действия </th>                  
+                         <th>Действия </th>
                      </tr>
                  </thead>
                  <tbody>
+                     <!-- Тут будут данные таблицы -->
                  </tbody>
              </table>
          </div>
@@ -40,6 +41,7 @@
      <!-- /.box -->
  </div>
 </div>
+
 <script src = "../dist/js/searchBar.js"></script>
 
 ';

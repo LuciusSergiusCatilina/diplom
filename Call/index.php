@@ -1,69 +1,73 @@
 <?php
  $content = '
  <div class="col-xs-12">
-    <div class="box">
-        <div class="box-header ">
-            <div class="row">
-                <div class="col-xs-6">
-                    <h3 class="box-title">Список вызовов</h3>
-                </div>
-                <div class="col-xs-6">
-                    <form action="#" method="get" class="pull-right">
-                        <div class="input-group">
-                            <input type="text" name="search" id="search" class="form-control input-sm" onkeyup="searchFunction(\'calls\')" placeholder="Поиск">
-                            <span class="input-group-btn">
-                                <button type="submit" name="search" id="search-btn" class="btn btn-flat btn-sm"><i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                        </div>
-                    </form>
-                    
-                </div>
-            </div>
+ <div class="box">
+     <div class="box-header">
+         <div class="row">
+             <div class="col-xs-6">
+                 <h3 class="box-title">Список вызовов</h3>
+             </div>
+             <div class="col-xs-6">
+                 <form action="#" method="get" class="pull-right">
+                     <div class="input-group">
+                         <input type="text" name="search" id="search" class="form-control input-sm" onkeyup="searchFunction(`calls`)" placeholder="Поиск">
+                         <span class="input-group-btn">
+                             <button type="submit" name="search" id="search-btn" class="btn btn-flat btn-sm"><i class="fa fa-search"></i></button>
+                         </span>
+                     </div>
+                 </form>
+             </div>
+         </div>
 
-            <div class="row ">
-                <div class="col-sm-2">
-                    <label for="startDate">Начальная дата:</label>
-                    <input type="datetime-local" id="startDate" name="startDate" class="form-control input-sm">
-                </div>
-                <div class="col-sm-2">
-                    <label for="endDate" class="">Конечная дата:</label>
-                    <input type="datetime-local" id="endDate" name="endDate" class="form-control input-sm">
-                </div>
-                <div class="input-group">
-                <span class="input-group-btn">
-                    <button class="btn btn-default btn-sm" type="button" onclick="clearInput()">Очистить</button>
-                </span>
-            </div>
-            </div>
-        </div>
+         <div class="row">
+             <div class="col-xs-6 col-sm-2">
+                 <label for="startDate">Начальная дата:</label>
+                 <input type="datetime-local" id="startDate" name="startDate" class="form-control input-sm">
+             </div>
+             <div class="col-xs-6 col-sm-2">
+                 <label for="endDate" class="">Конечная дата:</label>
+                 <input type="datetime-local" id="endDate" name="endDate" class="form-control input-sm">
+             </div>
+             <div class="col-xs-12 col-sm-2">
+                 <div class="input-group">
+                     <span class="input-group-btn">
+                         <button class="btn btn-default btn-sm" type="button" onclick="clearInput()">Очистить</button>
+                     </span>
+                 </div>
+             </div>
+         </div>
+     </div>
 
-        <div class="box-body">
+     <div class="box-body">
+         <div class="table-responsive">
+             <table id="calls" class="table table-bordered table-hover">
+                 <thead>
+                     <tr>
+                         <th>Номер вызова</th>
+                         <th>Диспетчер</th>
+                         <th>Бригада</th>
+                         <th>Адрес вызова</th>
+                         <th>Номер вызывавшего</th>
+                         <th>Пациент</th>
+                         <th>Время вызова</th>
+                         <th>Тип помощи</th>
+                         <th id="action">Действия <button title="Печать таблицы" onclick="printTable(`calls`)" class="btn btn-flat btn-sm pull-right"><i class="fa fa-file-text-o"></i></button></th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     <!-- Тут будут данные таблицы -->
+                 </tbody>
+             </table>
+         </div>
+     </div>
+     <!-- /.box-body -->
 
-            <table id="calls" class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>Номер вызова</th>
-                        <th>Диспетчер</th>
-                        <th>Бригада</th>
-                        <th>Адрес вызова</th>
-                        <th>Номер вызывавшего</th>
-                        <th>Пациент</th>
-                        <th>Время вызова</th>
-                        <th>Тип помощи</th>
-                        <th id ="action">Действия <button title = "Печать таблицы" onclick="printTable(\'calls\')"class="btn btn-flat btn-sm pull-right"> <i class="fa fa-file-text-o "> </i> </button></th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-        <!-- /.box-body -->
-        <div class="box-footer">
-            <button id="add_button" class="btn btn-flat btn-sm pull-right"><a style = "color: inherit" href="../Call/create.php">Добавить вызов</a></button>
-        </div>
-    </div>
+     <div class="box-footer">
+         <button id="add_button" class="btn btn-flat btn-sm pull-right"><a style="color: inherit" href="../Call/create.php">Добавить вызов</a></button>
+     </div>
+ </div>
 </div>
+
 ';
 
 include('../master.php');

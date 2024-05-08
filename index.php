@@ -1,123 +1,105 @@
 <?php
 $content = '
- <div class="row">
- <div class="col-md-6">
-   <div class="row">
-     <!-- Пример блока с общим количеством записей -->
-     <div class="col-md-6 col-sm-6 col-xs-12">
-       <div class="info-box">
-         <span class="info-box-icon bg-aqua"><i class="fa fa-file"></i></span>
-         <div class="info-box-content">
-           <span class="info-box-text">Общее количество вызовов</span>
-           <span class="info-box-number" id = "countCalls"></span>
-         </div>
-       </div>
-     </div>
-     <div class="col-md-6 col-sm-6 col-xs-12">
-       <div class="info-box">
-         <span class="info-box-icon bg-red"><i class="fa fa-wheelchair-alt"></i></span>
-         <div class="info-box-content">
-           <span class="info-box-text">Общее количество пациентов</span>
-           <span class="info-box-number" id = "countPatients"></span>
-         </div>
-       </div>
-     </div>
-     <!-- Добавьте другие блоки с другой статистикой здесь -->
-   </div>
-
-   <div class="row">
-     <div class="col-md-6 col-sm-6 col-xs-12">
-       <div class="info-box bg-green">
-         <span class="info-box-icon"><i class="fa fa-comments-o"></i></span>
-         <div class="info-box-content">
-           <span class="info-box-text">Консультаций</span>
-           <span class="info-box-number" id ="countConsultations"></span>
-           <div class="progress">
-             <div class="progress-bar" style="width: 70%" id ="countConsultationsProcentBar"></div>
-           </div>
-           <span class="progress-description" id ="countConsultationsProcent">
-           </span>
-         </div>
-       </div>
-     </div>
-
-     <div class="col-md-6 col-sm-6 col-xs-12">
-       <div class="info-box bg-yellow">
-         <span class="info-box-icon"><i class="fa fa-ambulance"></i></span>
-         <div class="info-box-content">
-           <span class="info-box-text">Выездов бригад</span>
-           <span class="info-box-number" id ="сountDepartures"></span>
-           <div class="progress">
-             <div class="progress-bar" style="width: 70%" id = "countCallsProcentBar"></div>
-           </div>
-           <span class="progress-description" id ="countCallsProcent">
-           </span>
-         </div>
-       </div>
-     </div>
-   </div>
-
-   <!-- Пример блока с графиком -->
-   <div class="row">
-     <div class="col-xs-12">
-       <div class="box box-primary">
-         <div class="box-header with-border">
-           <h3 class="box-title">График вызовов по месяцам</h3>
-         </div>
-         <div class="box-body">
-           <canvas id="recordsChart" width="200" height="100"></canvas>
-         </div>
-       </div>
-     </div>
-   </div>
- </div>
-
- <div class="col-md-6">
-   <div class="row">
-     <div class="col-xs-12">
-       <div class="box">
-         <div class="box-header">
-           <div class="row">
-             <div class="col-xs-9">
-               <h3 class="box-title">Список бригад</h3>
-             </div>
-             <div class="col-xs-3">
-               <form action="#" method="get" class="pull-right">
-                 <div class="input-group">
-                   <input type="text" name="search" id="search" class="form-control input-sm" onkeyup="searchFunction(\'crews\')" placeholder="Поиск">
-                   <span class="input-group-btn">
-                     <button type="submit" name="search" id="search-btn" class="btn btn-flat btn-sm"><i class="fa fa-search"></i>
-                     </button>
-                   </span>
-                 </div>
-               </form>
-             </div>
-           </div>
-           <!-- /.box-header -->
-           <div class="box-body">
-             <table id="crews" class="table table-bordered table-hover">
-               <thead>
-                 <tr>
-                   <th>Номер бригады</th>
-                   <th>Водитель</th>
-                   <th>Доктор</th>
-                   <th>Санитар</th>
-                   <th>Фельдшер</th>  
-                 </tr>
-               </thead>
-               <tbody>
-               </tbody>
-             </table>
-           </div>
-           <!-- /.box-body -->
-         </div>
-         <!-- /.box -->
-       </div>
-     </div>
-   </div>
- </div>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-aqua"><i class="fa fa-file"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Общее количество вызовов</span>
+        <span class="info-box-number" id="countCalls"></span>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-red"><i class="fa fa-wheelchair-alt"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Общее количество пациентов</span>
+        <span class="info-box-number" id="countPatients"></span>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="info-box bg-green">
+      <span class="info-box-icon"><i class="fa fa-comments-o"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Консультаций</span>
+        <span class="info-box-number" id="countConsultations"></span>
+        <div class="progress">
+          <div class="progress-bar" style="width: 70%" id="countConsultationsProcentBar"></div>
+        </div>
+        <span class="progress-description" id="countConsultationsProcent"></span>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="info-box bg-yellow">
+      <span class="info-box-icon"><i class="fa fa-ambulance"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Выездов бригад</span>
+        <span class="info-box-number" id="сountDepartures"></span>
+        <div class="progress">
+          <div class="progress-bar" style="width: 70%" id="countCallsProcentBar"></div>
+        </div>
+        <span class="progress-description" id="countCallsProcent"></span>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="box box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title">График вызовов по месяцам</h3>
+      </div>
+      <div class="box-body">
+        <canvas id="recordsChart" width="200" height="100"></canvas>
+      </div>
+    </div>
+  </div>
 </div>
-      
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box">
+      <div class="box-header">
+        <div class="row">
+          <div class="col-xs-9">
+            <h3 class="box-title">Список бригад</h3>
+          </div>
+          <div class="col-xs-3">
+            <form action="#" method="get" class="pull-right">
+              <div class="input-group">
+                <input type="text" name="search" id="search" class="form-control input-sm" onkeyup="searchFunction(`crews`)" placeholder="Поиск">
+                <span class="input-group-btn">
+                  <button type="submit" name="search" id="search-btn" class="btn btn-flat btn-sm"><i class="fa fa-search"></i></button>
+                </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body table-responsive">
+        <table id="crews" class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>Номер бригады</th>
+              <th>Водитель</th>
+              <th>Доктор</th>
+              <th>Санитар</th>
+              <th>Фельдшер</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Тут будут данные таблицы -->
+          </tbody>
+        </table>
+      </div>
+      <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+  </div>
+</div>
+
 
       
 ';
