@@ -30,6 +30,11 @@
                     <label for="endDate" class="">Конечная дата:</label>
                     <input type="datetime-local" id="endDate" name="endDate" class="form-control input-sm">
                 </div>
+                <div class="input-group">
+                <span class="input-group-btn">
+                    <button class="btn btn-default btn-sm" type="button" onclick="clearInput()">Очистить</button>
+                </span>
+            </div>
             </div>
         </div>
 
@@ -61,7 +66,7 @@
 </div>
 ';
 
- include('../master.php');
+include('../master.php');
 ?>
 <!-- page script -->
 <script src = "../dist/js/searchBar.js"></script>
@@ -125,4 +130,11 @@
         });
     }
  }
+
+ function clearInput() {
+    document.getElementById("startDate").value = '';
+    document.getElementById("endDate").value = '';
+    filterByDate();
+
+}
 </script>
