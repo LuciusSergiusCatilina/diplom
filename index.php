@@ -1,7 +1,9 @@
 <?php
 $content = '
 <div class="row">
-  <div class="col-xs-12">
+  <div class="col-xs-12 col-md-6"> <!-- Левая колонка -->
+
+    
     <div class="info-box">
       <span class="info-box-icon bg-aqua"><i class="fa fa-file"></i></span>
       <div class="info-box-content">
@@ -9,8 +11,7 @@ $content = '
         <span class="info-box-number" id="countCalls"></span>
       </div>
     </div>
-  </div>
-  <div class="col-xs-12">
+    
     <div class="info-box">
       <span class="info-box-icon bg-red"><i class="fa fa-wheelchair-alt"></i></span>
       <div class="info-box-content">
@@ -18,8 +19,7 @@ $content = '
         <span class="info-box-number" id="countPatients"></span>
       </div>
     </div>
-  </div>
-  <div class="col-xs-12">
+    
     <div class="info-box bg-green">
       <span class="info-box-icon"><i class="fa fa-comments-o"></i></span>
       <div class="info-box-content">
@@ -31,8 +31,7 @@ $content = '
         <span class="progress-description" id="countConsultationsProcent"></span>
       </div>
     </div>
-  </div>
-  <div class="col-xs-12">
+    
     <div class="info-box bg-yellow">
       <span class="info-box-icon"><i class="fa fa-ambulance"></i></span>
       <div class="info-box-content">
@@ -44,9 +43,7 @@ $content = '
         <span class="progress-description" id="countCallsProcent"></span>
       </div>
     </div>
-  </div>
-  <div class="col-xs-12">
-    <div class="box box-primary">
+        <div class="box box-primary">
       <div class="box-header with-border">
         <h3 class="box-title">График вызовов по месяцам</h3>
       </div>
@@ -55,10 +52,8 @@ $content = '
       </div>
     </div>
   </div>
-</div>
-
-<div class="row">
-  <div class="col-xs-12">
+  
+  <div class="col-xs-12 col-md-6"> <!-- Правая колонка -->
     <div class="box">
       <div class="box-header">
         <div class="row">
@@ -101,6 +96,7 @@ $content = '
 </div>
 
 
+
       
 ';
 
@@ -129,7 +125,7 @@ include 'master.php';
             url: "../api/crew/read.php",
             dataType: 'json',
             success: function(data) {
-                var response = "";
+                let response = "";
                 for (var crew in data) {
                     response += "<tr>" +
                         "<td>" + data[crew].id_crew + "</td>" +

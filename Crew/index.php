@@ -1,47 +1,54 @@
 <?php
- $content = '<div class="row">
-                <div class="col-xs-12">
-                <div class="box">
-                 <div class="box-header">
-                 <div class="row">
-                 <div class="col-xs-9">
-                     <h3 class="box-title">Список бригад</h3>
-                 </div>
-                 <div class="col-xs-3">
-                     <form action="#" method="get" class="pull-right">
-                         <div class="input-group">
-                         <input type="text" name="search" id = "search" class="form-control input-sm" onkeyup="searchFunction(\'crews\')" placeholder="Поиск">
-                             <span class="input-group-btn">
-                                 <button type="submit" name="search" id="search-btn" class="btn btn-flat btn-sm"><i class="fa fa-search"></i>
-                                 </button>
-                             </span>
-                         </div>
-                     </form>
-                 </div>
+ $content = '
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="row">
+                    <div class="col-xs-9">
+                        <h3 class="box-title">Список бригад</h3>
+                    </div>
+                    <div class="col-xs-3">
+                        <form action="#" method="get" class="pull-right">
+                            <div class="input-group">
+                                <input type="text" name="search" id="search" class="form-control input-sm" onkeyup="searchFunction(`crews`)" placeholder="Поиск">
+                                <span class="input-group-btn">
+                                    <button type="submit" name="search" id="search-btn" class="btn btn-flat btn-sm"><i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                 <!-- /.box-header -->
-                 <div class="box-body">
-                    <table id="crews" class="table table-bordered table-hover">
-                      <thead>
-                      <tr>
-                        <th>Номер бригады</th>
-                        <th>Водитель</th>
-                        <th>Доктор</th>
-                        <th>Санитар</th>
-                        <th>Фельдшер</th>
-                        <th>Действия</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      </tbody>
-                    </table>
-                 </div>
-                 <!-- /.box-body -->
-                </div>
-                <!-- /.box -->
-              </div>
             </div>
-            <script src = "../dist/js/searchBar.js"></script>';
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="table-responsive"> <!-- Обернули таблицу здесь -->
+                    <table id="crews" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Номер бригады</th>
+                                <th>Водитель</th>
+                                <th>Доктор</th>
+                                <th>Санитар</th>
+                                <th>Фельдшер</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Здесь будут строки таблицы -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+
+            <script src = "../dist/js/searchBar.js"></script>
+            ';
  include('../master.php');
 ?>
 <!-- page script -->
