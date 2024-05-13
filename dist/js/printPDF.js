@@ -1,22 +1,37 @@
-function printTable(tableName) {
+function printTable(tableData) {
     let printableWindow = window.open('', '_blank', 'width=800,height=600');
-  
-    let table = document.getElementById(tableName);
-  
-    let tableClone = table.cloneNode(true);
-  
-    tableClone.querySelectorAll('th#action').forEach(cell => cell.remove());
-    tableClone.querySelectorAll('td#action').forEach(cell => cell.remove());
-  
-    let tableContent = tableClone.outerHTML;
-    
+
+    let tableContent = '<table>';
+
+    // Генерация HTML для заголовков таблицы
+    tableContent += '<thead><tr>';
+    Object.keys(tableData[0]).forEach(key => {
+        if (key !== 'id_call' && key !== 'id_user' && key !== 'id_crew' && key !== 'id_patient' && key !== 'time') {
+            tableContent += `<th>${key}</th>`;
+        }
+    });
+    tableContent += '</tr></thead>';
+
+    // Генерация HTML для тела таблицы
+    tableContent += '<tbody>';
+    tableData.forEach(row => {
+        tableContent += '<tr>';
+        Object.values(row).forEach(value => {
+            tableContent += `<td>${value}</td>`;
+        });
+        tableContent += '</tr>';
+    });
+    tableContent += '</tbody>';
+
+    tableContent += '</table>';
+
     let startDateInput = document.getElementById("startDate").value;
     let endDateInput = document.getElementById("endDate").value;
-  
+
     moment.locale('ru');
     let startDate = moment(startDateInput).format('Do MMMM YYYY, h:mm ');
     let endDate = moment(endDateInput).format('Do MMMM YYYY, h:mm ');
-  
+
     let printableContent = `
     <!DOCTYPE html>
     <html lang="en">
@@ -24,7 +39,7 @@ function printTable(tableName) {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Таблица вызовов</title>
-        <style>
+ <style>
             body {
                 padding: 20px;
                 font-family: Arial, sans-serif;
@@ -82,14 +97,9 @@ function printTable(tableName) {
     ${tableContent}
     </body>
     </html>
-    
-  `;
-  
-    // Записываем HTML в окно печати
+    `;
+
     printableWindow.document.write(printableContent);
-  
-    // Вызываем метод печати
     printableWindow.document.close();
     printableWindow.print();
-  }
-  
+}

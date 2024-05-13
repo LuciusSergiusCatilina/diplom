@@ -188,16 +188,16 @@ function update()
   function getDates(){
     
     $query = "SELECT 
-    YEAR(`time`) AS year,
-    MONTHNAME(`time`) AS month_name,
-    COUNT(*) AS calls_count
-FROM 
-    calls
-GROUP BY 
-    year, month_name
-ORDER BY 
-    year ASC
-LIMIT 0, 50";
+              YEAR(`time`) AS year,
+              MONTHNAME(`time`) AS month_name,
+              COUNT(*) AS calls_count
+          FROM 
+              calls
+          GROUP BY 
+              year, month_name
+          ORDER BY 
+              year ASC
+          LIMIT 0, 50";
 
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
