@@ -80,9 +80,66 @@ $content = '
 include('../master.php');
 ?>
 <!-- page script -->
-<script src = "../dist/js/printPDF.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
+    
+
+    let dataTable;
+
+    $(document).ready(function(){
+
+        $.ajax({
+            type: "GET",
+            url: "../api/call/read.php",
+            dataType: 'json',
+            success: function(data) {
+                dataTable = data;
+                fillTable(1);
+            }
+        });
+        // Поиск по имени
+        $('#searchInput').on('input', function(){
+            fillTable(1);
+        });
+        $("#actionPrint").on('click', function (){
+            var filteredData = filterData();
+            printTable(filteredData);
+        });
+        $('#startDate').on('change', function(){
+            fillTable(1);
+        });
+        $('#endDate').on('change', function(){
+            fillTable(1);
+        });
+    });
+
+    function Remove(id){
+        var result = confirm("Вы уверены что хотите удалить вызов?");
+        if (result == true) {
+            $.ajax(
+                {
+                    type: "POST",
+                    url: '../api/call/delete.php', // Изменено на URL для удаления экипажа
+                    dataType: 'json',
+                    data: {
+                        id: id
+                    },
+                    error: function (result) {
+                        alert(result.responseText);
+                    },
+                    success: function (result) {
+                        if (result['status'] === true) {
+                            alert("Вызов успешно удалён");
+                            window.location.href = '../Call'; // Изменено на URL страницы экипажей
+                        }
+                        else {
+                            alert(result['message']);
+                        }
+                    }
+                });
+        }
+    }
+
     function clearInput() {
         document.getElementById("startDate").value = '';
         document.getElementById("endDate").value = '';
@@ -171,56 +228,6 @@ include('../master.php');
                 $('#pagination li').removeClass('active');
                 $(this).addClass('active');
             });
-        }
-    }
-
-    let dataTable;
-
-    $(document).ready(function(){
-
-        $.ajax({
-            type: "GET",
-            url: "../api/call/read.php",
-            dataType: 'json',
-            success: function(data) {
-                dataTable = data;
-                fillTable(1);
-            }
-        });
-        // Поиск по имени
-        $('#searchInput').on('input', function(){
-            fillTable(1);
-        });
-        $("#actionPrint").on('click', function (){
-            var filteredData = filterData();
-            printTable(filteredData);
-        });
-    });
-
-    function Remove(id){
-        var result = confirm("Вы уверены что хотите удалить вызов?");
-        if (result == true) {
-            $.ajax(
-                {
-                    type: "POST",
-                    url: '../api/call/delete.php', // Изменено на URL для удаления экипажа
-                    dataType: 'json',
-                    data: {
-                        id: id
-                    },
-                    error: function (result) {
-                        alert(result.responseText);
-                    },
-                    success: function (result) {
-                        if (result['status'] === true) {
-                            alert("Вызов успешно удалён");
-                            window.location.href = '../Call'; // Изменено на URL страницы экипажей
-                        }
-                        else {
-                            alert(result['message']);
-                        }
-                    }
-                });
         }
     }
 
