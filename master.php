@@ -220,6 +220,7 @@
 
 
 <script src="../bower_components/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="../bower_components/jquery-validation/dist/additional-method.min.js"></script>
 
 
 </body>

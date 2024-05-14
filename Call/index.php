@@ -317,7 +317,7 @@ include('../master.php');
     </style>
 </head>
 <body>
-${startDateInput || endDateInput ? `<h2>Записи в период с ${startDate ?? ""} до ${endDate ?? ""}</h2>` : ""}
+${startDateInput && endDateInput ? `<h2>Записи в период с ${startDate ?? ""} до ${endDate ?? ""}</h2>` : ""}
 <table>
     <thead>
         <tr>
