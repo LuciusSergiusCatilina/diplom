@@ -55,84 +55,83 @@ include('../master.php');
 
 <script>
 
-  $(document).ready(function() {
-    $.ajax({
-      type: "GET",
-      url: "../api/call/getCrews.php",
-      dataType: 'json',
-      success: function(data) {
-        var options = "";
-        options += "<option value=''>" + "Бригада не требуется" + "</option>";
+$(document).ready(function() {
+    // Функция для заполнения опций бригад
+    function fillCrewOptions(data) {
+        var options = "<option value=''>Бригада не требуется</option>";
         for (var i = 0; i < data.length; i++) {
-          options += "<option value='" + data[i].id_crew + "'>" + data[i].id_crew + "</option>";
+            options += "<option value='" + data[i].id_crew + "'>" + data[i].id_crew + "</option>";
         }
         $("#crew").html(options);
-        checkCrew("type","crew");
-      }
-    });
+        checkCrew("type", "crew");
+    }
 
-    $.ajax({
-      type: "GET",
-      url: "../api/call/getPatients.php",
-      dataType: 'json',
-      success: function(data) {
-        var options = "";
-        options += "<option value=''>" + "Добавить позже" + "</option>";
+    // Функция для заполнения опций пациентов
+    function fillPatientOptions(data) {
+        var options = "<option value=''>Добавить позже</option>";
         for (var i = 0; i < data.length; i++) {
-          options += "<option value='" + data[i].id_patient + "'>" + data[i].name + "</option>";
+            options += "<option value='" + data[i].id_patient + "'>" + data[i].name + "</option>";
         }
         $("#patient").html(options);
-      }
+    }
+
+    // Запрос на получение бригад
+    $.ajax({
+        type: "GET",
+        url: "../api/call/getCrews.php",
+        dataType: 'json',
+        success: fillCrewOptions
     });
 
+    // Запрос на получение пациентов
+    $.ajax({
+        type: "GET",
+        url: "../api/call/getPatients.php",
+        dataType: 'json',
+        success: fillPatientOptions
+    });
+
+    // Валидация формы
     $("#formCalls").validate({
-      rules: {
-        type: {
-          required: true
+        rules: {
+            type: {
+                required: true
+            },
+            crew: {
+                required: true
+            },
+            adress: {
+                required: true
+            },
+            phone: {
+                required: true,
+                russianPhoneNumber: true,
+                // minlength: 12,
+                // maxlength: 12
+            }
         },
-        crew: {
-          required: true
-        },
-        adress: {
-          required: true
-        },
-        phone: {
-          required: true,
-          russianPhoneNumber: true,
-          // minlength: 12,
-          // maxlength: 12
+        messages: {
+            type: "Пожалуйста, выберите тип помощи",
+            crew: "Пожалуйста, выберите номер бригады",
+            adress: "Пожалуйста, введите адрес",
+            phone: {
+                regex: "Пожалуйста, введите корректный номер телефона в формате +79001114455",
+                required: "Пожалуйста, введите номер телефона"
+                // minlength: "Номер телефона должен быть длиной 12 цифр",
+                // maxlength: "Номер телефона должен быть длиной 11 цифр"
+            }
         }
-      },
-      messages: {
-        type: "Пожалуйста, выберите тип помощи",
-        crew: "Пожалуйста, выберите номер бригады",
-        adress: "Пожалуйста, введите адрес",
-        phone: {
-          regex: "Пожалуйста, введите корректный номер телефона в формате +79001114455",
-          required: "Пожалуйста, введите номер телефона"
-          // minlength: "Номер телефона должен быть длиной 12 цифр",
-          // maxlength: "Номер телефона должен быть длиной 11 цифр"
-        }
-      }
     });
-    
+});
 
+$("#type").change(function() {
+    checkCrew("type", "crew");
+});
 
-  });
-  $("#type").change(function(){
-      checkCrew("type","crew");
-    });
-
-    function AddCrew(event) {
-    // Отменяем стандартное действие формы (отправку)
-    event.preventDefault();
-
-    // Запускаем валидацию формы
-    var isValid = $("#formCalls").valid();
-
-    // Проверяем, прошла ли валидация
+function AddCrew(event) {
+    event.preventDefault(); // Отменяем стандартное действие формы (отправку)
+    var isValid = $("#formCalls").valid(); // Запускаем валидацию формы
     if (isValid) {
-        // Ваш существующий код для AJAX-запроса
         $.ajax({
             type: "POST",
             url: '../api/call/create.php',
@@ -152,11 +151,9 @@ include('../master.php');
             success: function(result) {
                 if (result['status'] == true) {
                     alert("Вызов успешно добавлен!");
-                    // Предполагается, что сервер возвращает URL для перенаправления
                     if (result['redirectUrl']) {
                         window.location.href = result['redirectUrl'];
                     } else {
-                        // Если URL для перенаправления не предоставлен, используйте заранее определенный URL
                         window.location.href = '../Call';
                     }
                 } else {
@@ -167,33 +164,22 @@ include('../master.php');
     }
 }
 
-
-  function checkCrew(type, crew){
-    console.log("check")
+function checkCrew(type, crew) {
     let selectedType = $(`#${type}`).val();
-    console.log(selectedType);
     let selectedCrew = $(`#${crew}`);
-    let consultationOption = document.createElement("option");
-    let crewSelect = document.getElementById("crew");
-    consultationOption.text = "Бригада не требуется";
-    consultationOption.value = "";
-    if (selectedType === "Консультация"){
-      console.log(crewSelect.options[0].text)
-       if (crewSelect.options[0].text !== "Бригада не требуется"){
-             selectedCrew.prepend(consultationOption);  
-       }
-      selectedCrew.prop("disabled", true);
-      selectedCrew[0].selectedIndex = 0;
+    let consultationOption = $("<option>").text("Бригада не требуется").val("");
+    if (selectedType === "Консультация") {
+        if (selectedCrew.find("option:first-child").text() !== "Бригада не требуется") {
+            selectedCrew.prepend(consultationOption);
+        }
+        selectedCrew.prop("disabled", true).val("");
+    } else if (selectedType === "Вызов бригады") {
+        selectedCrew.find("option:first-child").remove();
+        selectedCrew.prop("disabled", false);
     }
-    else if (selectedType === "Вызов бригады"){
-      let optionToRemove = crewSelect.options[0];
-      crewSelect.remove(optionToRemove); 
-      selectedCrew.prop("disabled", false);
-    }
-    
-  }
+}
 
-  $.validator.addMethod("russianPhoneNumber", function(value, element) {
+$.validator.addMethod("russianPhoneNumber", function(value, element) {
     return this.optional(element) || /^((\+7|7|8)+([0-9]){10})$/.test(value);
 }, "Укажите телефон в формате +79991112244");
 </script> 
