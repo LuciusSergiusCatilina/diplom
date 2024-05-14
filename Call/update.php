@@ -9,7 +9,7 @@ $content = '<div class="row">
     </div>
     <!-- /.box-header -->
     <!-- form start -->
-    <form role="form">
+    <form id = "formCalls" role="form">
       <div class="box-body">
       <div class="form-group">
       <label for="type">Тип помощи</label>

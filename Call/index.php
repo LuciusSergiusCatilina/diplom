@@ -109,6 +109,9 @@ include('../master.php');
         $('#endDate').on('change', function(){
             fillTable(1);
         });
+
+        
+
     });
 
     function Remove(id){
@@ -192,10 +195,10 @@ include('../master.php');
     function renderTable(data) {
         $('#tableBody').empty();
         $.each(data, function(index, item) {
-            var date = new Date(item.time);
-            var formatDateTime =  new Intl.DateTimeFormat("ru", {dateStyle:"long", timeStyle:"short"}).format(date);
-            var brigade = item.id_crew ? item.id_crew : "Бригада не вызвана";
-            var patient = item.patient_name ? item.patient_name : "Добавить позже";
+            let date = new Date(item.time);
+            let formatDateTime =  new Intl.DateTimeFormat("ru", {dateStyle:"long", timeStyle:"short"}).format(date);
+            let brigade = item.id_crew ? item.id_crew : "Бригада не вызвана";
+            let patient = item.patient_name ? item.patient_name : "Добавить позже";
             $('#tableBody').append(
                 '<tr><td>' + item.id_call +
                 '</td><td>' + item.user_name +
@@ -246,8 +249,8 @@ include('../master.php');
             tableContent += '</tr>';
         });
 
-        var startDateInput = document.getElementById("startDate").value;
-        var endDateInput = document.getElementById("endDate").value;
+        let startDateInput = document.getElementById("startDate").value;
+        let endDateInput = document.getElementById("endDate").value;
 
         moment.locale('ru');
         var startDate = moment(startDateInput).format('Do MMMM YYYY, h:mm ');
