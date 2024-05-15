@@ -42,7 +42,7 @@ $content = '<div class="row">
                       </div>
                       <!-- /.box-body -->
                       <div class="box-footer">
-                        <input type="submit" class="btn btn-primary" onclick="AddCrew(event)" value="Добавить вызов"></input>
+                        <input type="submit" class="btn btn-primary" onclick="AddCall(event)" value="Добавить вызов"></input>
                         <input type="button" class="btn btn-danger" onClick="window.location.href = `../Call` " value="Назад"></input>
                       </div>
                     </form>
@@ -90,7 +90,7 @@ $(document).ready(function() {
         dataType: 'json',
         success: fillPatientOptions
     });
-
+ 
     // Валидация формы
     $("#formCalls").validate({
         rules: {
@@ -101,7 +101,8 @@ $(document).ready(function() {
                 required: true
             },
             adress: {
-                required: true
+                required: true,
+                minLength: 10
             },
             phone: {
                 required: true,
@@ -113,7 +114,10 @@ $(document).ready(function() {
         messages: {
             type: "Пожалуйста, выберите тип помощи",
             crew: "Пожалуйста, выберите номер бригады",
-            adress: "Пожалуйста, введите адрес",
+            adress: {
+                required: "Пожалуйста, введите адрес",
+                minLength: "Слишком короткий адрес"
+            },
             phone: {
                 regex: "Пожалуйста, введите корректный номер телефона в формате +79001114455",
                 required: "Пожалуйста, введите номер телефона"
@@ -128,7 +132,7 @@ $("#type").change(function() {
     checkCrew("type", "crew");
 });
 
-function AddCrew(event) {
+function AddCall(event) {
     event.preventDefault(); // Отменяем стандартное действие формы (отправку)
     var isValid = $("#formCalls").valid(); // Запускаем валидацию формы
     if (isValid) {

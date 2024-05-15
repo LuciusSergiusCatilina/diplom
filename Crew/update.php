@@ -5,44 +5,44 @@
                  <!-- general form elements -->
                  <div class="box box-primary">
                     <div class="box-header with-border">
-                      <h3 class="box-title">Добавить экипаж</h3>
+                      <h3 class="box-title">Изменить экипаж</h3>
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form role="form">
+                    <form role="form" id = "formCrews">
                       <div class="box-body">
                       <div class="form-group">
-                      <label for="exampleInputName1">ID экипажа</label>
-                      <input required type="text" class="form-control" id="crew" placeholder="Введите номер экипажа" >
+                      <label for="exampleInputName1">Номер экипажа</label>
+                      <input required type="text" class="form-control" id="crew" name = "crew" placeholder="Введите номер экипажа" readonly>
                         </div>
                         <div class="form-group">
                           <label for="driver">Водитель</label>
-                          <select class="form-control" id="driver">
+                          <select class="form-control" id="driver" name = "driver">
                             <!-- Здесь будут опции для выбора водителя -->
                           </select>
                         </div>
                         <div class="form-group">
                           <label for="doctor">Доктор</label>
-                          <select class="form-control" id="doctor">
+                          <select class="form-control" id="doctor" name = "doctor">
                             <!-- Здесь будут опции для выбора доктора -->
                           </select>
                         </div>
                         <div class="form-group">
                           <label for="paramedic">Фельдшер</label>
-                          <select class="form-control" id="paramedic">
+                          <select class="form-control" id="paramedic" name = "paramedic">
                           
                           </select>
                         </div>
                         <div class="form-group">
                           <label for="orderly">Санитар</label>
-                          <select class="form-control" id="orderly">
+                          <select class="form-control" id="orderly" name = "orderly">
 
                           </select>
                         </div>
                       </div>
                       <!-- /.box-body -->
                       <div class="box-footer">
-                        <input type="button" class="btn btn-primary" onClick="UpdateCrew()" value="Изменить бригаду"></input>
+                        <input type="button" class="btn btn-primary" onClick="UpdateCrew(event)" value="Изменить экипаж"></input>
                       </div>
                     </form>
                  </div>
@@ -58,7 +58,7 @@
             url: "../api/crew/read_single.php?id=<?php echo $_GET['id']; ?>",
             dataType: 'json',
             success: function(data) {
-                //$('#crew').val(data['id_crew'])
+                $('#crew').val(data['id_crew'])
                 $('#driver').val(data['id_driver']);
                 $('#doctor').val(data['id_doctor']);
                 $('#paramedic').val(data['id_paramedic']);
@@ -68,6 +68,28 @@
                 console.log(result);
             },
         });
+        $("#formCrews").validate({
+        rules: {
+            crew: {
+                required: true
+            },
+            driver: {
+                required: true
+            },
+            doctor: {
+                required: true
+            },
+            orderly: {
+                required: true,
+            }
+        },
+        messages: {
+            crew: "Пожалуйста, выберите номер бригады",
+            driver: "Пожалуйста, выберите водителя",
+            doctor: "Пожалуйста, выберите врача",
+            orderly: "Пожалуйста, выберите санитара",
+        }
+    });
     });
       $.ajax({
         type: "GET",
@@ -120,7 +142,9 @@
         }
     });
 
-    function UpdateCrew(){
+    function UpdateCrew(event){
+        const isValid = $("#formCrews").valid();
+        if (isValid){
         $.ajax(
         {
             type: "POST",
@@ -146,5 +170,9 @@
                 }
             }
         });
+      }
     }
+
+
+
 </script>

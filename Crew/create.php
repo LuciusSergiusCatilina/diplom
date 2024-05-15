@@ -9,40 +9,41 @@
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form role="form">
+                    <form role="form" id = "formCrews">
                       <div class="box-body">
                       <div class="form-group">
                       <label for="exampleInputName1">Номер бригады</label>
-                      <input required type="text" class="form-control" id="crew" placeholder="Введите номер экипажа" >
+                      <input required type="text" class="form-control" id="crew" name = "crew" placeholder="Введите номер экипажа" >
                         </div>
                         <div class="form-group">
                           <label for="driver">Водитель</label>
-                          <select class="form-control" id="driver">
+                          <select class="form-control" id="driver" name = "driver">
                             <!-- Здесь будут опции для выбора водителя -->
                           </select>
                         </div>
                         <div class="form-group">
                           <label for="doctor">Доктор</label>
-                          <select class="form-control" id="doctor">
+                          <select class="form-control" id="doctor" name = "doctor">
                             <!-- Здесь будут опции для выбора доктора -->
                           </select>
                         </div>
                         <div class="form-group">
                           <label for="paramedic">Фельдшер</label>
-                          <select class="form-control" id="paramedic">
+                          <select class="form-control" id="paramedic" name = "paramedic">
                           
                           </select>
                         </div>
                         <div class="form-group">
                           <label for="orderly">Санитар</label>
-                          <select class="form-control" id="orderly">
+                          <select class="form-control" id="orderly" name = "orderly">
 
                           </select>
                         </div>
                       </div>
                       <!-- /.box-body -->
                       <div class="box-footer">
-                        <input type="button" class="btn btn-primary" onClick="AddCrew()" value="Добавить экипаж"></input>
+                        <input type="button" class="btn btn-primary" onClick="AddCrew(event)" value="Добавить экипаж"></input>
+                        <input type="button" class="btn btn-danger" onClick="window.location.href = `../Crew` " value="Назад"></input>
                       </div>
                     </form>
                  </div>
@@ -104,9 +105,33 @@ $(document).ready(function(){
             $("#paramedic").html(options);
         }
     });
+    $("#formCrews").validate({
+        rules: {
+            crew: {
+                required: true
+            },
+            driver: {
+                required: true
+            },
+            doctor: {
+                required: true
+            },
+            orderly: {
+                required: true,
+            }
+        },
+        messages: {
+            crew: "Пожалуйста, выберите номер бригады",
+            driver: "Пожалуйста, выберите водителя",
+            doctor: "Пожалуйста, выберите врача",
+            orderly: "Пожалуйста, выберите санитара",
+        }
+    });
 });
-function AddCrew(){
-
+function AddCrew(event){
+    event.preventDefault();
+    const isValid = $("#formCrews").valid();
+    if (isValid){
     $.ajax({
         type: "POST",
         url: '../api/crew/create.php',
@@ -138,6 +163,7 @@ function AddCrew(){
             }
         }
     });
+}
 }
 
 

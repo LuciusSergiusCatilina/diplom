@@ -238,9 +238,6 @@ include('../master.php');
 
         var tableContent;
 
-
-
-        // Генерация HTML для тела таблицы
         tableData.forEach(row => {
             tableContent += '<tr>';
             Object.values(row).forEach(value => {
@@ -338,7 +335,6 @@ ${startDateInput && endDateInput ? `<h2>Записи в период с ${startD
 </body>
 </html>
     `;
-
         printableWindow.document.write(printableContent);
         printableWindow.document.close();
         printableWindow.print();
