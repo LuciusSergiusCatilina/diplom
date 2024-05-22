@@ -13,7 +13,17 @@ $doctor = new Doctor($db);
  
 // set doctor property values
 $doctor->name = $_POST['name'];
-$doctor->number = $_POST['number']; // Предполагается, что 'number' соответствует 'phone' в вашей форме
+
+$phoneNumber = $_POST['number'];
+if (str_contains($phoneNumber, "+")){
+    $doctor->number = substr($phoneNumber,1);
+}
+else {
+    $doctor->number = $_POST['number'];
+}
+
+
+
 $doctor->specialization = $_POST['specialization']; // Предполагается, что 'specialization' соответствует 'specialist' в вашей форме
 
 // create the doctor

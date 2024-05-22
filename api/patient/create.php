@@ -13,7 +13,13 @@ $patient = new Patient($db); // Изменено на Patient
  
 // set patient property values
 $patient->name = $_POST['name'];
-$patient->number = $_POST['number']; // Предполагается, что 'number' соответствует 'phone' в вашей форме
+$phoneNumber = $_POST['number'];
+if (str_contains($phoneNumber, "+")){
+    $patient->number = substr($phoneNumber,1);
+}
+else {
+    $patient->number = $_POST['number'];
+}
 $patient->adress = $_POST['adress']; // Добавлено свойство adress
 
 // create the patient

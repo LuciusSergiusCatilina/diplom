@@ -13,7 +13,13 @@ $orderly = new Orderly($db);
  
 // set orderly property values
 $orderly->name = $_POST['name'];
-$orderly->number = $_POST['number']; // Убедитесь, что в вашей форме есть поле 'number'
+$phoneNumber = $_POST['number'];
+if (str_contains($phoneNumber, "+")){
+    $orderly->number = substr($phoneNumber,1);
+}
+else {
+    $orderly->number = $_POST['number'];
+}
 
 // create the orderly
 if($orderly->create()){

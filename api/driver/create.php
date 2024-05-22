@@ -13,7 +13,13 @@ $driver = new Driver($db); // Изменено на Driver
  
 // set driver property values
 $driver->name = $_POST['name'];
-$driver->phone = $_POST['phone']; // Предполагается, что 'phone' соответствует 'phone' в вашей форме
+$phoneNumber = $_POST['phone'];
+if (str_contains($phoneNumber, "+")){
+    $driver->phone = substr($phoneNumber,1);
+}
+else {
+    $driver->phone = $_POST['phone'];
+}
 
 // create the driver
 if($driver->create()){

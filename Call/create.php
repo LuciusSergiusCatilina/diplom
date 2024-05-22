@@ -42,14 +42,30 @@ $content = '<div class="row">
                       </div>
                       <!-- /.box-body -->
                       <div class="box-footer">
-                        <input type="submit" class="btn btn-primary" onclick="AddCall(event)" value="Добавить вызов"></input>
+                        <input type="button" class="btn btn-primary" onclick="AddCall(event)" value="Добавить вызов"></input>
                         <input type="button" class="btn btn-danger" onClick="window.location.href = `../Call` " value="Назад"></input>
                       </div>
                     </form>
                  </div>
                  <!-- /.box -->
                 </div>
-              </div>';
+              </div>
+              <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title" id="successModalLabel">Успешно!</h1>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    Вызов успешно добавлен!
+                  </div>
+                </div>
+              </div>
+            </div>
+              ';
 include('../master.php');
 ?>
 
@@ -75,7 +91,6 @@ $(document).ready(function() {
         $("#patient").html(options);
     }
 
-    // Запрос на получение бригад
     $.ajax({
         type: "GET",
         url: "../api/call/getCrews.php",
@@ -83,15 +98,13 @@ $(document).ready(function() {
         success: fillCrewOptions
     });
 
-    // Запрос на получение пациентов
     $.ajax({
         type: "GET",
         url: "../api/call/getPatients.php",
         dataType: 'json',
         success: fillPatientOptions
     });
- 
-    // Валидация формы
+
     $("#formCalls").validate({
         rules: {
             type: {
@@ -102,7 +115,7 @@ $(document).ready(function() {
             },
             adress: {
                 required: true,
-                minLength: 10
+                minlength: 10
             },
             phone: {
                 required: true,
@@ -116,10 +129,10 @@ $(document).ready(function() {
             crew: "Пожалуйста, выберите номер бригады",
             adress: {
                 required: "Пожалуйста, введите адрес",
-                minLength: "Слишком короткий адрес"
+                minlength: "Слишком короткий адрес"
             },
             phone: {
-                regex: "Пожалуйста, введите корректный номер телефона в формате +79001114455",
+                russianPhoneNumber: "Пожалуйста, введите корректный номер телефона в формате +79001114455",
                 required: "Пожалуйста, введите номер телефона"
                 // minlength: "Номер телефона должен быть длиной 12 цифр",
                 // maxlength: "Номер телефона должен быть длиной 11 цифр"
@@ -133,9 +146,7 @@ $("#type").change(function() {
 });
 
 function AddCall(event) {
-    event.preventDefault(); // Отменяем стандартное действие формы (отправку)
-    var isValid = $("#formCalls").valid(); // Запускаем валидацию формы
-    if (isValid) {
+    if ($("#formCalls").valid()) {
         $.ajax({
             type: "POST",
             url: '../api/call/create.php',
@@ -154,12 +165,10 @@ function AddCall(event) {
             },
             success: function(result) {
                 if (result['status'] == true) {
-                    alert("Вызов успешно добавлен!");
-                    if (result['redirectUrl']) {
-                        window.location.href = result['redirectUrl'];
-                    } else {
+                    $("#successModal").modal("show");
+                    setTimeout(function() {
                         window.location.href = '../Call';
-                    }
+                    }, 2500);
                 } else {
                     alert(result['message']);
                 }

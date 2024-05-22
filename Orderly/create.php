@@ -9,20 +9,21 @@ $content = '<div class="row">
     </div>
     <!-- /.box-header -->
     <!-- form start -->
-    <form role="form">
+    <form role="form" id = "formOrderly">
       <div class="box-body">
         <div class="form-group">
           <label for="exampleInputName1">Имя</label>
-          <input required type="text" class="form-control" id="name" placeholder="Введите имя" >
+          <input required type="text" class="form-control" id="name" placeholder="Введите ФИО" name = "name" minlength="10">
         </div>
         <div class="form-group">
           <label for="exampleInputName1">Телефон</label>
-          <input type="tel" class="form-control" id="number" placeholder="Введите номер телефона"> 
+          <input type="tel" class="form-control" id="number" placeholder="Введите номер телефона" name = "phone" minlength="12" maxlength="12"> 
         </div>
       </div>
       <!-- /.box-body -->
       <div class="box-footer">
         <input type="button" class="btn btn-primary" onClick="AddOrderly()" value="Добавить"></input>
+        <input type="button" class="btn btn-danger" onClick="window.location.href = `../Orderly` " value="Назад"></input>
       </div>
     </form>
  </div>
@@ -34,10 +35,49 @@ include '../master.php';
 
 ?>
 <script>
+
+    $(document).ready(function(){
+        $.validator.addMethod("russianPhoneNumber", function(value, element) {
+            return this.optional(element) || /^((\+7|7|8)+([0-9]){10})$/.test(value);
+        }, "Укажите телефон в формате +79991112244");
+
+        $.validator.addMethod("russianLetters", function(value, element) {
+            return this.optional(element) || /^[А-Яа-яЁё\s]+$/.test(value);
+        }, "Пожалуйста, введите только русские буквы.");
+        $("#formOrderly").validate({
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 10,
+                    russianLetters: true
+                },
+                phone: {
+                    required: true,
+                    minlength: 11,
+                    russianPhoneNumber: true
+                },
+            },
+            messages: {
+                name: {
+                    required: "Пожалуйста, введите ФИО",
+                    minlength: "Слишком короткое ФИО",
+                    russianLetters: "Пожалуйста, введите только русские буквы"
+                },
+                phone: {
+                    required: "Пожалуйста, введите номер телефона",
+                    russianPhoneNumber: "Пожалуйста, введите телефон в формате +79991112244",
+                    minlength: "Пожалуйста, введите телефон в формате +79991112244",
+                    maxlength: "Пожалуйста, введите телефон в формате +79991112244"
+                },
+
+            }
+        });
+    })
 function AddOrderly(){
+    if ($("#formOrderly").valid()){
     $.ajax({
         type: "POST",
-        url: '../api/orderly/create.php', // Изменено на 'orderly/create.php'
+        url: '../api/orderly/create.php',
         dataType: 'json',
         data: {
             name: $("#name").val(),
@@ -49,12 +89,13 @@ function AddOrderly(){
         success: function (result) {
             if (result['status'] == true) {
                 alert("Новый санитар успешно добавлен!");
-                window.location.href = '../Orderly'; // Изменено на '/medibed/orderly'
+                window.location.href = '../Orderly';
             }
             else {
                 alert(result['message']);
             }
         }
     });
+    }
 }
 </script>

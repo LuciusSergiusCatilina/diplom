@@ -34,6 +34,7 @@ $content = '
                  <input type="datetime-local" id="endDate" name="endDate" class="form-control input-sm">
              </div>
              <div class="col-xs-12 col-sm-2">
+             <label for="endDate" class="">ㅤ</label>
                  <div class="input-group">
                      <span class="input-group-btn">
                          <button class="btn btn-default btn-sm" type="button" onclick="clearInput()">Очистить</button>
@@ -49,7 +50,6 @@ $content = '
                  <thead>
                      <tr>
                          <th>Номер вызова</th>
-                         <th>Диспетчер</th>
                          <th>Бригада</th>
                          <th>Адрес вызова</th>
                          <th>Номер вызывавшего</th>
@@ -75,6 +75,27 @@ $content = '
  </div>
 </div>
 
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Подтверждение удаления</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Вы уверены, что хотите удалить этот вызов?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Удалить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 ';
 
 include('../master.php');
@@ -86,15 +107,7 @@ include('../master.php');
 
     $(document).ready(function(){
 
-        $.ajax({
-            type: "GET",
-            url: "../api/call/read.php",
-            dataType: 'json',
-            success: function(data) {
-                dataTable = data;
-                fillTable(1);
-            }
-        });
+        fetchAndUpdateTable()
         // Поиск по имени
         $('#searchInput').on('input', function(){
             fillTable(1);
@@ -109,36 +122,45 @@ include('../master.php');
         $('#endDate').on('change', function(){
             fillTable(1);
         });
-
-        
-
     });
 
     function Remove(id){
-        var result = confirm("Вы уверены что хотите удалить вызов?");
-        if (result == true) {
-            $.ajax(
-                {
-                    type: "POST",
-                    url: '../api/call/delete.php', // Изменено на URL для удаления экипажа
-                    dataType: 'json',
-                    data: {
-                        id: id
-                    },
-                    error: function (result) {
-                        alert(result.responseText);
-                    },
-                    success: function (result) {
-                        if (result['status'] === true) {
-                            alert("Вызов успешно удалён");
-                            window.location.href = '../Call'; // Изменено на URL страницы экипажей
-                        }
-                        else {
-                            alert(result['message']);
-                        }
+        $('#confirmDeleteModal').modal('show');
+
+        $('#confirmDeleteButton').click(function(){
+            $.ajax({
+                type: "POST",
+                url: '../api/call/delete.php',
+                dataType: 'json',
+                data: {
+                    id: id
+                },
+                error: function (result) {
+                    alert(result.responseText);
+                },
+                success: function (result) {
+                    if (result['status'] === true) {
+                        fetchAndUpdateTable();
+                        $('#confirmDeleteModal').modal('hide');
                     }
-                });
-        }
+                    else {
+                        alert(result['message']);
+                    }
+                }
+            });
+        });
+    }
+
+    function fetchAndUpdateTable() {
+        $.ajax({
+            type: "GET",
+            url: "../api/call/read.php",
+            dataType: 'json',
+            success: function(data) {
+                dataTable = data;
+                fillTable(1);
+            }
+        });
     }
 
     function clearInput() {
@@ -148,10 +170,9 @@ include('../master.php');
         createPagination();
     }
     function fillTable(pageNumber) {
-        var pageSize = 2; // Количество элементов на странице
+        var pageSize = 5; // Количество элементов на странице
         var startIndex = (pageNumber - 1) * pageSize;
         var endIndex = startIndex + pageSize;
-        console.log(dataTable);
         var filteredData = filterData();
 
         // Проверяем количество записей после фильтрации
@@ -195,13 +216,12 @@ include('../master.php');
     function renderTable(data) {
         $('#tableBody').empty();
         $.each(data, function(index, item) {
-            let date = new Date(item.time);
-            let formatDateTime =  new Intl.DateTimeFormat("ru", {dateStyle:"long", timeStyle:"short"}).format(date);
-            let brigade = item.id_crew ? item.id_crew : "Бригада не вызвана";
-            let patient = item.patient_name ? item.patient_name : "Добавить позже";
+            var date = new Date(item.time);
+            var formatDateTime =  new Intl.DateTimeFormat("ru", {dateStyle:"long", timeStyle:"short"}).format(date);
+            var brigade = item.id_crew ? item.id_crew : "Бригада не вызвана";
+            var patient = item.patient_name ? item.patient_name : "Добавить позже";
             $('#tableBody').append(
                 '<tr><td>' + item.id_call +
-                '</td><td>' + item.user_name +
                 '</td><td>' + brigade +
                 '</td><td>' + item.adress +
                 '</td><td>' + item.number +
@@ -216,7 +236,7 @@ include('../master.php');
 
     // Функция для создания пагинации
     function createPagination() {
-        var pageSize = 2; // Количество элементов на странице
+        var pageSize = 5; // Количество элементов на странице
         var pageCount = Math.ceil(filterData().length / pageSize);
         $('#pagination').empty();
         if (pageCount > 1) {
@@ -239,15 +259,22 @@ include('../master.php');
         var tableContent;
 
         tableData.forEach(row => {
+            let formatTime = moment(row.time).format('Do MMMM YYYY, h:mm ');
+            console.loge
             tableContent += '<tr>';
-            Object.values(row).forEach(value => {
-                tableContent += `<td>${value}</td>`;
-            });
+            tableContent += `<td>${row.id_call}</td>`;
+            tableContent += `<td>${row.user_name}</td>`;
+            tableContent += `<td>${row.id_crew ?? "Бригада не вызвана"}</td>`;
+            tableContent += `<td>${row.adress}</td>`;
+            tableContent += `<td>${row.number}</td>`;
+            tableContent += `<td>${row.patient_name ?? "Добавить позже"}</td>`;
+            tableContent += `<td>${formatTime}</td>`;
+            tableContent += `<td>${row.type}</td>`;
             tableContent += '</tr>';
         });
 
-        let startDateInput = document.getElementById("startDate").value;
-        let endDateInput = document.getElementById("endDate").value;
+        var startDateInput = document.getElementById("startDate").value;
+        var endDateInput = document.getElementById("endDate").value;
 
         moment.locale('ru');
         var startDate = moment(startDateInput).format('Do MMMM YYYY, h:mm ');
@@ -314,7 +341,7 @@ include('../master.php');
     </style>
 </head>
 <body>
-${startDateInput && endDateInput ? `<h2>Записи в период с ${startDate ?? ""} до ${endDate ?? ""}</h2>` : ""}
+${startDateInput || endDateInput ? `<h2>Записи в период с ${startDate ?? ""} до ${endDate ?? ""}</h2>` : ""}
 <table>
     <thead>
         <tr>

@@ -36,7 +36,7 @@ $content = '<div class="row">
         </div>
         <div class="form-group">
         <label for="adress">Номер телефона</label>
-        <input required type="tel" class="form-control" id="phone" name ="phone" placeholder="+79001114455" maxlength = 11>
+        <input required type="tel" class="form-control" id="phone" name ="phone" placeholder="+79001114455" minlength = 11 maxlength = 12>
         </div>
 
       </div>
@@ -56,7 +56,7 @@ $content = '<div class="row">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="successModalLabel">Успех!</h5>
+        <h1 class="modal-title" id="successModalLabel">Успешно!</h1>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -128,9 +128,7 @@ $("#type").change(function() {
 function UpdateCall() {
     event.preventDefault();
 
-    var isValid = $("#formCalls").valid();
-
-    if (isValid) {
+    if ($("#formCalls").valid()) {
         $.ajax({
             type: "POST",
             url: '../api/call/update.php',
@@ -141,7 +139,7 @@ function UpdateCall() {
                 id_patient: $("#patient").val(),
                 adress: $("#adress").val(),
                 type: $("#type").val(),
-                number: $("#phone").val()
+                phone: $("#phone").val()
             },
             error: function(result) {
                 alert(result['message']);

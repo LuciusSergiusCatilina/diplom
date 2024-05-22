@@ -14,7 +14,15 @@ $doctor = new Doctor($db);
 // set doctor property values
 $doctor->id_doctor = $_POST['id'];
 $doctor->name = $_POST['name'];
-$doctor->number = $_POST['number']; // Assuming 'number' is the new field for phone number
+$phoneNumber = $_POST['number'];
+
+if (str_contains($phoneNumber, "+")){
+    $doctor->number = substr($phoneNumber,1);
+}
+else {
+    $doctor->number = $_POST['number'];
+}
+
 $doctor->specialization = $_POST['specialization']; // Assuming 'specialization' is the new field for specialist
  
 // create the doctor

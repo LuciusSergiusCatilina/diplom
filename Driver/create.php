@@ -13,11 +13,11 @@ $content = '<div class="row">
       <div class="box-body">
         <div class="form-group">
           <label for="exampleInputName1">Имя</label>
-          <input required type="text" class="form-control" id="name" placeholder="Введите имя" name = "name">
+          <input required type="text" class="form-control" id="name" placeholder="Введите имя" name = "name" minlength="10">
         </div>
         <div class="form-group">
           <label for="exampleInputName1">Телефон</label>
-          <input type="tel" class="form-control" id="phone" placeholder="Введите телефон" name = "phone"> 
+          <input type="tel" class="form-control" id="phone" placeholder="Введите телефон" name = "phone" minlength="12" maxlength="12"> 
         </div>
       </div>
       <!-- /.box-body -->
@@ -67,7 +67,9 @@ $(document).ready(function(){
         },
         phone: {
           required: "Пожалуйста, введите номер телефона",
-          russianPhoneNumber: "Пожалуйста, введите телефон в формате +79991112244"
+          russianPhoneNumber: "Пожалуйста, введите телефон в формате +79991112244",
+            minlength: "Пожалуйста, введите телефон в формате +79991112244",
+            maxlength: "Пожалуйста, введите телефон в формате +79991112244"
         },
      
       }
