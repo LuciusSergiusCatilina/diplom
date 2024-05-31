@@ -113,7 +113,7 @@ include('../master.php');
             fillTable(1);
         });
         $("#actionPrint").on('click', function (){
-            var filteredData = filterData();
+            let filteredData = filterData();
             printTable(filteredData);
         });
         $('#startDate').on('change', function(){
@@ -170,27 +170,27 @@ include('../master.php');
         createPagination();
     }
     function fillTable(pageNumber) {
-        var pageSize = 5; // Количество элементов на странице
-        var startIndex = (pageNumber - 1) * pageSize;
-        var endIndex = startIndex + pageSize;
-        var filteredData = filterData();
+        let pageSize = 5; // Количество элементов на странице
+        let startIndex = (pageNumber - 1) * pageSize;
+        let endIndex = startIndex + pageSize;
+        let filteredData = filterData();
 
         // Проверяем количество записей после фильтрации
         if (filteredData.length <= pageSize) {
             $('#pagination').empty(); // Очищаем пагинацию
         }
 
-        var paginatedData = filteredData.slice(startIndex, endIndex);
+        let paginatedData = filteredData.slice(startIndex, endIndex);
         renderTable(paginatedData);
     }
 
     function filterData() {
-        var searchInput = $('#searchInput').val().toLowerCase();
-        var startDateInput = document.getElementById("startDate").value;
-        var endDateInput = document.getElementById("endDate").value;
+        let searchInput = $('#searchInput').val().toLowerCase();
+        let startDateInput = document.getElementById("startDate").value;
+        let endDateInput = document.getElementById("endDate").value;
 
-        var filteredData = dataTable.filter(function(item) {
-            for (var key in item) {
+        let filteredData = dataTable.filter(function(item) {
+            for (let key in item) {
                 if (item.hasOwnProperty(key) && key !== 'time' && key !== "id_patient" && key !== "id_user") {
                     if (item[key] && item[key].toString().toLowerCase().includes(searchInput)) {
                         return true; // Найдено совпадение в текущем поле, возвращаем true
@@ -203,9 +203,9 @@ include('../master.php');
         // Фильтрация данных по выбранному периоду дат
         if (startDateInput && endDateInput) {
             filteredData = filteredData.filter(function (item) {
-                var rowDate = new Date(item.time).getTime();
-                var startDate = new Date(startDateInput).getTime();
-                var endDate = new Date(endDateInput).getTime();
+                let rowDate = new Date(item.time).getTime();
+                let startDate = new Date(startDateInput).getTime();
+                let endDate = new Date(endDateInput).getTime();
                 return rowDate >= startDate && rowDate <= endDate;
             });
         }
@@ -216,10 +216,10 @@ include('../master.php');
     function renderTable(data) {
         $('#tableBody').empty();
         $.each(data, function(index, item) {
-            var date = new Date(item.time);
-            var formatDateTime =  new Intl.DateTimeFormat("ru", {dateStyle:"long", timeStyle:"short"}).format(date);
-            var brigade = item.id_crew ? item.id_crew : "Бригада не вызвана";
-            var patient = item.patient_name ? item.patient_name : "Добавить позже";
+            let date = new Date(item.time);
+            let formatDateTime =  new Intl.DateTimeFormat("ru", {dateStyle:"long", timeStyle:"short"}).format(date);
+            let brigade = item.id_crew ? item.id_crew : "Бригада не вызвана";
+            let patient = item.patient_name ? item.patient_name : "Добавить позже";
             $('#tableBody').append(
                 '<tr><td>' + item.id_call +
                 '</td><td>' + brigade +
@@ -236,15 +236,15 @@ include('../master.php');
 
     // Функция для создания пагинации
     function createPagination() {
-        var pageSize = 5; // Количество элементов на странице
-        var pageCount = Math.ceil(filterData().length / pageSize);
+        let pageSize = 5; // Количество элементов на странице
+        let pageCount = Math.ceil(filterData().length / pageSize);
         $('#pagination').empty();
         if (pageCount > 1) {
-            for (var i = 1; i <= pageCount; i++) {
+            for (let i = 1; i <= pageCount; i++) {
                 $('#pagination').append('<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>');
             }
             $('#pagination li').on('click', function(){
-                var pageNumber = parseInt($(this).text());
+                let pageNumber = parseInt($(this).text());
                 fillTable(pageNumber);
                 $('#pagination li').removeClass('active');
                 $(this).addClass('active');
@@ -254,13 +254,12 @@ include('../master.php');
 
     function printTable(tableData) {
         console.log(tableData);
-        var printableWindow = window.open('', '_blank', 'width=800,height=600');
+        let printableWindow = window.open('', '_blank', 'width=800,height=600');
 
-        var tableContent;
+        let tableContent = "";
 
         tableData.forEach(row => {
             let formatTime = moment(row.time).format('Do MMMM YYYY, h:mm ');
-            console.loge
             tableContent += '<tr>';
             tableContent += `<td>${row.id_call}</td>`;
             tableContent += `<td>${row.user_name}</td>`;
@@ -273,14 +272,16 @@ include('../master.php');
             tableContent += '</tr>';
         });
 
-        var startDateInput = document.getElementById("startDate").value;
-        var endDateInput = document.getElementById("endDate").value;
+        let startDateInput = document.getElementById("startDate").value;
+        let endDateInput = document.getElementById("endDate").value;
 
         moment.locale('ru');
-        var startDate = moment(startDateInput).format('Do MMMM YYYY, h:mm ');
-        var endDate = moment(endDateInput).format('Do MMMM YYYY, h:mm ');
+        let startDate = moment(startDateInput).format('Do MMMM YYYY, h:mm ');
+        let endDate = moment(endDateInput).format('Do MMMM YYYY, h:mm ');
 
-        var printableContent = `
+        let searchInput = document.getElementById("searchInput").value;
+
+        let printableContent = `
         <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -342,6 +343,7 @@ include('../master.php');
 </head>
 <body>
 ${startDateInput || endDateInput ? `<h2>Записи в период с ${startDate ?? ""} до ${endDate ?? ""}</h2>` : ""}
+${searchInput ? `<h3> Поиск по ${searchInput} </h3>` : ""}
 <table>
     <thead>
         <tr>
