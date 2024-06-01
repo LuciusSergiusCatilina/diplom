@@ -1,4 +1,8 @@
 <?php
+session_start();
+if ($_SESSION['user_role'] !== 'admin' || $_SESSION['user_role'] !== 'Начальник отдела кадров') {
+    header("location:../notenoughpermission.php");
+}
  $content = '<div class="row">
                 <!-- left column -->
                 <div class="col-md-12">

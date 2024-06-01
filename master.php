@@ -1,3 +1,13 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+die("Авторизуйтесь!"); //заменить на страницу об авторизации
+//или сообщение + таймаут и редирект на авторизацию
+}
+$HRPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] === 'Начальник отдела кадров');
+$CMOPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] === 'Начальник подстанции');
+$DispatcherPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] === 'Диспетчер');
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,7 +28,7 @@
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
   <header class="main-header">
-    <a href="/" class="logo">
+    <a href="/dashboard.php" class="logo">
       <span class="logo-mini"><b>П</b>одстанция</span>
       <span class="logo-lg">Подстанция</span>
     </a>
@@ -27,8 +37,34 @@
         <span class="sr-only">Навигация</span>
       </a>
       <div class="navbar-custom-menu">
-        <ul class="nav navbar-nav">
-        </ul>
+          <ul class="nav navbar-nav">
+
+
+              <!-- User Account Menu -->
+              <li class="dropdown user user-menu">
+                  <!-- Menu Toggle Button -->
+                  <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                      <!-- The user image in the navbar-->
+                      <img src="../dist/img/avatar5.png" class="user-image" alt="User Image">
+                      <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                      <span class="hidden-xs"><?= $_SESSION['user_name']; ?></span>
+                  </a>
+                  <ul class="dropdown-menu">
+                      <!-- The user image in the menu -->
+                      <li class="user-header">
+                          <img src="../dist/img/avatar5.png" class="img-circle" alt="User Image">
+                          <p>
+                              <?= $_SESSION['user_name']; ?> - <?= $_SESSION['user_role']; ?>
+                          </p>
+                      </li>
+
+                      <!-- Menu Footer-->
+                      <li class="user-footer">
+                          <div class="m-a">
+                              <a href="api/User/logout.php" class="btn btn-danger btn-flat">Выйти</a>
+                          </div>
+                      </li>
+                  </ul>
       </div>
     </nav>
   </header>
@@ -36,7 +72,17 @@
   <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
-      <!-- Sidebar user panel (optional) -->
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel">
+            <div class="pull-left image">
+                <img src="../dist/img/avatar5.png" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+                <p><?= $_SESSION['user_name']; ?></p>
+                <!-- Status -->
+                <a href=""></i><?= $_SESSION['user_role']; ?></a>
+            </div>
+        </div>
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">Меню</li>
@@ -48,7 +94,9 @@
               </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="../Doctor/create.php">Добавить доктора</a></li>
+              <?php if ($HRPermission): ?>
+                  <li><a href="../Doctor/create.php">Добавить доктора</a></li>
+              <?php endif; ?>
             <li><a href="../Doctor">Список докторов</a></li>
           </ul>
         </li>
@@ -59,7 +107,9 @@
               </span>
           </a>
           <ul class="treeview-menu">
+              <?php if ($CMOPermission || $DispatcherPermission): ?>
             <li><a href="../Patient/create.php">Добавить пациента</a></li>
+              <?php endif; ?>
             <li><a href="../Patient">Список пациентов</a></li>
           </ul>
         </li>
@@ -70,7 +120,9 @@
               </span>
           </a>
           <ul class="treeview-menu">
+              <?php if ($HRPermission): ?>
             <li><a href="../Driver/create.php">Добавить водителя</a></li>
+              <?php endif; ?>
             <li><a href="../Driver">Список водителей</a></li>
           </ul>
         </li>
@@ -81,7 +133,9 @@
               </span>
           </a>
           <ul class="treeview-menu">
+              <?php if ($HRPermission): ?>
             <li><a href="../Paramedic/create.php">Добавить фельдшера</a></li>
+              <?php endif; ?>
             <li><a href="../Paramedic">Список фельдшеров</a></li>
           </ul>
         </li>
@@ -92,7 +146,9 @@
               </span>
           </a>
           <ul class="treeview-menu">
+              <?php if ($HRPermission): ?>
             <li><a href="../Orderly/create.php">Добавить санитара</a></li>
+              <?php endif; ?>
             <li><a href="../Orderly">Список санитаров</a></li>
           </ul>
         </li>
@@ -103,7 +159,9 @@
               </span>
           </a>
           <ul class="treeview-menu">
+              <?php if ($CMOPermission): ?>
             <li><a href="../Crew/create.php">Добавить бригаду</a></li>
+              <?php endif; ?>
             <li><a href="../Crew">Список бригад</a></li>
           </ul>
         </li>
@@ -114,7 +172,9 @@
               </span>
           </a>
           <ul class="treeview-menu">
+              <?php if ($CMOPermission || $DispatcherPermission): ?>
             <li><a href="../Call/create.php">Добавить вызов</a></li>
+              <?php endif; ?>
             <li><a href="../Call">Список вызовов</a></li>
           </ul>
         </li>
@@ -173,3 +233,4 @@
 
 </body>
 </html>
+>
