@@ -1,4 +1,6 @@
 <?php
+session_start();
+$hasPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] === 'Начальник подстанции' || $_SESSION['user_role'] === 'Диспетчер');
 $content = '
 <style>
     .pagination {
@@ -56,7 +58,8 @@ $content = '
                          <th>Пациент</th>
                          <th>Время вызова</th>
                          <th>Тип помощи</th>
-                         <th >Действия <button id="actionPrint" title="Печать таблицы" class="btn btn-flat btn-sm pull-right"><i class="fa fa-file-text-o"></i></button></th>
+                         ' .  ($hasPermission ? '<th >Действия <button id="actionPrint" title="Печать таблицы" class="btn btn-flat btn-sm pull-right"><i class="fa fa-file-text-o"></i></button></th>' : "") . '
+                         
                      </tr>
                  </thead>
                  <tbody id="tableBody">
@@ -228,7 +231,9 @@ include('../master.php');
                 '</td><td>' + patient +
                 "</td><td data-time = '" + date + "'>" + formatDateTime +
                 '</td><td>' + item.type +
+                <?php if ($hasPermission): ?>
                 '</td><td id="action"><a href="update.php?id=' + item.id_call + '">Изменить</a> | <a href="#" onClick="Remove(\'' + item.id_call + '\')">Удалить</a></td></tr>'
+                <?php endif; ?>
             );
         });
         createPagination();

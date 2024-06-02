@@ -1,4 +1,6 @@
 <?php
+session_start();
+$hasPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] === 'Начальник отдела кадров');
  $content = '
  <div class="row">
     <div class="col-xs-12">
@@ -27,7 +29,7 @@
                         <tr>
                             <th>ФИО</th>
                             <th>Номер телефона</th>
-                            <th>Действия</th>
+                            ' .  ($hasPermission ? "<th>Действия </th>" : "") . '
                         </tr>
                     </thead>
                     <tbody>
@@ -60,8 +62,12 @@ include('../master.php');
           response += "<tr>" +
             "<td>" + data[user].name + "</td>" +
             "<td>" + data[user].phone + "</td>" + // Изменено на 'phone'
+              <?php if ($hasPermission): ?>
             "<td><a href='update.php?id=" + data[user].id_drivers + "'>Изменить</a> | <a href='#' onClick=Remove('" + data[user].id_drivers + "')>Удалить</a></td>" +
+              <?php endif; ?>
             "</tr>";
+
+
         }
         $(response).appendTo($("#drivers tbody")); // Изменено на 'drivers'
       }

@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-die("Авторизуйтесь!"); //заменить на страницу об авторизации
+    header("location:/notauthorize.php");
 //или сообщение + таймаут и редирект на авторизацию
 }
 $HRPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] === 'Начальник отдела кадров');
@@ -61,7 +61,7 @@ $DispatcherPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_r
                       <!-- Menu Footer-->
                       <li class="user-footer">
                           <div class="m-a">
-                              <a href="api/User/logout.php" class="btn btn-danger btn-flat">Выйти</a>
+                              <a href="/api/User/logout.php" class="btn btn-danger btn-flat">Выйти</a>
                           </div>
                       </li>
                   </ul>

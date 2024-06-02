@@ -1,6 +1,6 @@
 <?php
 session_start();
-if ($_SESSION['user_role'] !== 'admin' || $_SESSION['user_role'] !== 'Начальник отдела кадров') {
+if ($_SESSION['user_role'] !== 'admin' && $_SESSION['user_role'] !== 'Начальник отдела кадров') {
     header("location:../notenoughpermission.php");
 }
  $content = '<div class="row">

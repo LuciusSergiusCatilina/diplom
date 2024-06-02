@@ -1,4 +1,6 @@
 <?php
+session_start();
+$hasPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] === 'Начальник подстанции' || $_SESSION['user_role'] === 'Диспетчер');
 $content = '
 <div class="row">
     <div class="col-xs-12">
@@ -28,7 +30,7 @@ $content = '
                             <th>ФИО</th>
                             <th>Номер телефона</th>
                             <th>Адрес</th>
-                            <th>Действия</th>
+                            ' .  ($hasPermission ? "<th>Действия </th>" : "") . '
                         </tr>
                     </thead>
                     <tbody>
@@ -60,8 +62,10 @@ $content = '
                 "<td>"+data[user].name+"</td>"+
                 "<td>"+data[user].number+"</td>"+ 
                 "<td>"+data[user].adress+"</td>"+ // Изменено на 'adress'
-                "<td><a href='update.php?id="+data[user].id_patient+"'>Изменить</a> | <a href='#' onClick=Remove('"+data[user].id_patient+"')>Удалить</a></td>"+ 
-                "</tr>";
+                    <?php if ($hasPermission): ?>
+                "<td><a href='update.php?id="+data[user].id_patient+"'>Изменить</a> | <a href='#' onClick=Remove('"+data[user].id_patient+"')>Удалить</a></td>"+
+                    <?php endif; ?>
+                    "</tr>";
             }
             $(response).appendTo($("#patients tbody")); // Изменено на 'patients'
         }

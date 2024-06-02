@@ -1,4 +1,6 @@
 <?php
+session_start();
+$hasPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] === 'Начальник отдела кадров');
 $content = '
 <div class="row">
     <div class="col-xs-12">
@@ -27,7 +29,7 @@ $content = '
                         <tr>
                             <th>Имя</th>
                             <th>Телефон</th>
-                            <th>Действия</th>
+                            ' .  ($hasPermission ? "<th>Действия </th>" : "") . '
                         </tr>
                     </thead>
                     <tbody>
@@ -58,9 +60,12 @@ include('../master.php');
             for(var user in data){
                 response += "<tr>"+
                 "<td>"+data[user].name+"</td>"+
-                "<td>"+data[user].number+"</td>"+ 
-                "<td><a href='update.php?id="+data[user].id_orderly+"'>Изменить</a> | <a href='#' onClick=Remove('"+data[user].id_orderly+"')>Удалить</a></td>"+ 
+                "<td>"+data[user].number+"</td>"+
+                    <?php if ($hasPermission): ?>
+                "<td><a href='update.php?id="+data[user].id_orderly+"'>Изменить</a> | <a href='#' onClick=Remove('"+data[user].id_orderly+"')>Удалить</a></td>"+
+                    <?php endif; ?>
                 "</tr>";
+
             }
             $(response).appendTo($("#orderlies tbody")); // Изменено на 'orderlies'
         }

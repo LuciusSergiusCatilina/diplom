@@ -1,4 +1,6 @@
 <?php
+session_start();
+$hasPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] === 'Начальник подстанции');
  $content = '
 <div class="row">
     <div class="col-xs-12">
@@ -32,7 +34,7 @@
                                 <th>Доктор</th>
                                 <th>Санитар</th>
                                 <th>Фельдшер</th>
-                                <th>Действия</th>
+                                ' .  ($hasPermission ? "<th>Действия </th>" : "") . '
                             </tr>
                         </thead>
                         <tbody>
@@ -61,14 +63,16 @@
         success: function(data) {
             var response="";
             for(var crew in data){
-                response += "<tr>"+
-                "<td>"+data[crew].id_crew+"</td>"+
-                "<td>"+data[crew].driver_name+"</td>"+ 
-                "<td>"+data[crew].doctor_name+"</td>"+
-                "<td>"+data[crew].orderly_name+"</td>"+
-                "<td>"+((data[crew].paramedic_name) ?? "Отсутствует")+"</td>"+
-                "<td><a href='update.php?id="+data[crew].id_crew+"'>Изменить</a> | <a href='#' onClick=Remove('"+data[crew].id_crew+"')>Удалить</a></td>"+ 
-                "</tr>";
+                response += "<tr>" +
+                    "<td>" + data[crew].id_crew + "</td>" +
+                    "<td>" + data[crew].driver_name + "</td>" +
+                    "<td>" + data[crew].doctor_name + "</td>" +
+                    "<td>" + data[crew].orderly_name + "</td>" +
+                    "<td>" + ((data[crew].paramedic_name) ?? "Отсутствует") + "</td>" +
+                    <?php if ($hasPermission): ?>
+                    "<td><a href='update.php?id=" + data[crew].id_crew + "'>Изменить</a> | <a href='#' onClick=Remove('" + data[crew].id_crew + "')>Удалить</a></td>" +
+                    <?php endif; ?>
+                    "</tr>";
             }
             $(response).appendTo($("#crews tbody")); 
         }
