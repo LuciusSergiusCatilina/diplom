@@ -142,7 +142,7 @@ function update()
   }
   function getCrews()
   {
-    $query = "SELECT id_crew FROM crews";
+    $query = "SELECT id_crew FROM crews WHERE is_available = 1";
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
 

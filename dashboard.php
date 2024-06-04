@@ -46,6 +46,7 @@ $content = '
               <th>Доктор</th>
               <th>Санитар</th>
               <th>Фельдшер</th>
+              <th>Готовность</th>
             </tr>
           </thead>
           <tbody>
@@ -99,6 +100,7 @@ include 'master.php';
     function fillCrewTable(data) {
         let response = "";
         data.forEach(crew => {
+            const statusIcon = crew.is_available ? '<i class="fa fa-circle text-success"></i>' : '<i class="fa fa-circle text-danger"></i>';
             response += `
         <tr>
           <td>${crew.id_crew}</td>
@@ -106,6 +108,7 @@ include 'master.php';
           <td>${crew.doctor_name}</td>
           <td>${crew.orderly_name}</td>
           <td>${crew.paramedic_name ?? "Отсутствует"}</td>
+          <td class='text-center'>${statusIcon}</td>";
         </tr>`;
         });
         $(response).appendTo($("#crews tbody"));

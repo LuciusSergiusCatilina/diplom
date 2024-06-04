@@ -1,29 +1,28 @@
 <?php
 class Crew
 {
-    // database connection and table name
-    private $conn;
-    private $table_name = 'crews'; // Изменено на имя таблицы в базе данных
+  // database connection and table name
+  private $conn;
+  private $table_name = 'crews';
 
-    // object properties
-    public $id_crew; // Изменено на имя столбца в базе данных
-    public $id_driver; // Добавлено свойство для драйвера
-    public $id_doctor; // Добавлено свойство для врача
-    public $id_paramedic; // Добавлено свойство для парамедика
-    public $id_orderly; // Добавлено свойство для медсестры
-    public $is_available;
+  // object properties
+  public $id_crew;
+  public $id_driver;
+  public $id_doctor;
+  public $id_paramedic;
+  public $id_orderly;
+  public $is_available;
 
-    // constructor with $db as database connection
-    public function __construct($db)
-    {
-        $this->conn = $db;
-    }
+  // constructor with $db as database connection
+  public function __construct($db)
+  {
+    $this->conn = $db;
+  }
 
-    // read all crews with their members' names
-    function read()
-    {
-        // select all query with JOINs
-        $query = "SELECT
+  // read all crews with their members' names
+  function read()
+  {
+    $query = "SELECT
                 c.id_crew,
                 c.is_available,
                 d.name as driver_name,
@@ -43,20 +42,16 @@ class Crew
               ORDER BY
                 c.id_crew DESC";
 
-        // prepare query statement
-        $stmt = $this->conn->prepare($query);
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
 
-        // execute query
-        $stmt->execute();
+    return $stmt;
+  }
 
-        return $stmt;
-    }
-
-    // get single crew data with their members' names
-    function read_single($id_crew)
-    {
-        // select all query with JOINs
-        $query = "SELECT
+  // get single crew data with their members' names
+  function read_single($id_crew)
+  {
+    $query = "SELECT
                 c.id_crew, c.id_driver, c.id_doctor, c.id_paramedic, c.id_orderly,
                 d.name as driver_name,
                 doc.name as doctor_name,
@@ -75,149 +70,131 @@ class Crew
               WHERE
                 c.id_crew = ?";
 
-        // prepare query statement
-        $stmt = $this->conn->prepare($query);
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(1, $id_crew);
+    $stmt->execute();
 
-        // bind id of crew to be updated
-        $stmt->bindParam(1, $id_crew);
+    return $stmt;
+  }
 
-        // execute query
-        $stmt->execute();
-
-        return $stmt;
-    }
-
-    function create()
-{
+  // create new crew
+  function create()
+  {
     try {
-        // query to insert record
-        $query = 'INSERT INTO ' . $this->table_name . ' (`id_crew`,`id_driver`, `id_doctor`, `id_paramedic`, `id_orderly`) VALUES (?,?, ?, ?, ?)';
+      $query = 'INSERT INTO ' . $this->table_name . ' (id_crew, id_driver, id_doctor, id_paramedic, id_orderly) VALUES (?, ?, ?, ?, ?)';
+      $stmt = $this->conn->prepare($query);
 
-        // prepare query
-        $stmt = $this->conn->prepare($query);
+      $stmt->bindParam(1, $this->id_crew);
+      $stmt->bindParam(2, $this->id_driver);
+      $stmt->bindParam(3, $this->id_doctor);
+      $stmt->bindParam(4, $this->id_paramedic);
+      $stmt->bindParam(5, $this->id_orderly);
 
-        // bind values
-        $stmt->bindParam(1, $this->id_crew);
-        $stmt->bindParam(2, $this->id_driver);
-        $stmt->bindParam(3, $this->id_doctor);
-        $stmt->bindParam(4, $this->id_paramedic);
-        $stmt->bindParam(5, $this->id_orderly);
+      if ($stmt->execute()) {
+        return true;
+      }
 
-        // execute query
-        if ($stmt->execute()) {
-            return true;
-        }
-
-        return false;
+      return false;
     } catch (Exception $e) {
-        return false;
+      return false;
     }
-}
-    // update crew
-    function update()
-{
+  }
+
+  // update crew
+  function update()
+  {
     try {
-        // query to update record
-        $query = 'UPDATE ' . $this->table_name . ' SET id_driver=?, id_doctor=?, id_paramedic=?, id_orderly=? WHERE id_crew=?';
+      $query = 'UPDATE ' . $this->table_name . ' SET id_driver=?, id_doctor=?, id_paramedic=?, id_orderly=? WHERE id_crew=?';
+      $stmt = $this->conn->prepare($query);
 
-        // prepare query
-        $stmt = $this->conn->prepare($query);
+      $stmt->bindParam(1, $this->id_driver);
+      $stmt->bindParam(2, $this->id_doctor);
+      $stmt->bindParam(3, $this->id_paramedic);
+      $stmt->bindParam(4, $this->id_orderly);
+      $stmt->bindParam(5, $this->id_crew);
 
-        // bind values
-        $stmt->bindParam(1, $this->id_driver);
-        $stmt->bindParam(2, $this->id_doctor);
-        $stmt->bindParam(3, $this->id_paramedic);
-        $stmt->bindParam(4, $this->id_orderly);
-        $stmt->bindParam(5, $this->id_crew);
+      if ($stmt->execute()) {
+        return true;
+      }
 
-        // execute query
-        if ($stmt->execute()) {
-            return true;
-        }
-
-        return false;
+      return false;
     } catch (Exception $e) {
-        return false;
+      return false;
     }
+  }
+
+  // update crew status
+  function update_status()
+  {
+    try {
+      $query = 'UPDATE ' . $this->table_name . ' SET is_available = ? WHERE id_crew=?';
+      $stmt = $this->conn->prepare($query);
+
+      $stmt->bindParam(1, $this->is_available);
+      $stmt->bindParam(2, $this->id_crew);
+
+      if ($stmt->execute()) {
+        return true;
+      }
+
+      return false;
+    } catch (Exception $e) {
+      return false;
+    }
+  }
+
+  // delete crew
+  function delete()
+  {
+    $query = 'DELETE FROM ' . $this->table_name . ' WHERE id_crew=?';
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(1, $this->id_crew);
+
+    if ($stmt->execute()) {
+      return true;
+    }
+
+    return false;
+  }
+
+  // get all drivers
+  function getDrivers()
+  {
+    $query = "SELECT id_drivers, name FROM drivers";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  // get all doctors
+  function getDoctors()
+  {
+    $query = "SELECT id_doctor, name FROM doctor";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  // get all orderlies
+  function getOrderly()
+  {
+    $query = "SELECT id_orderly, name FROM orderly";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  // get all paramedics
+  function getParamedics()
+  {
+    $query = "SELECT id_paramedic, name FROM paramedic";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
 }
-
-    function update_status()
-    {
-        try {
-            // query to update record
-            $query = 'UPDATE ' . $this->table_name . ' SET is_avialable = ? WHERE id_crew=?';
-
-            // prepare query
-            $stmt = $this->conn->prepare($query);
-
-            // bind values
-            $stmt->bindParam(1, $this->is_available);
-            $stmt->bindParam(2, $this->id_crew);
-
-            // execute query
-            if ($stmt->execute()) {
-                return true;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-
-    // delete crew
-    function delete()
-    {
-        // query to delete record
-        $query = 'DELETE FROM ' . $this->table_name . ' WHERE id_crew=?';
-
-        // prepare query
-        $stmt = $this->conn->prepare($query);
-
-        // bind id of crew to be deleted
-        $stmt->bindParam(1, $this->id_crew);
-
-        // execute query
-        if ($stmt->execute()) {
-            return true;
-        }
-
-        return false;
-    }
-
-    function getDrivers()
-    {
-        $query = "SELECT id_drivers, name FROM drivers";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    function getDoctors()
-    {
-        $query = "SELECT id_doctor, name FROM doctor";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    function getOrderly()
-    {
-        $query = "SELECT id_orderly, name FROM orderly";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    function getParamedics()
-    {
-        $query = "SELECT id_paramedic, name FROM paramedic";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-
-}
+?>
