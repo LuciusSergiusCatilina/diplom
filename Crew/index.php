@@ -34,6 +34,7 @@ $hasPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] =
                                 <th>Доктор</th>
                                 <th>Санитар</th>
                                 <th>Фельдшер</th>
+                                ' .  ($hasPermission ? "<th>Готовность </th>" : "") . '
                                 ' .  ($hasPermission ? "<th>Действия </th>" : "") . '
                             </tr>
                         </thead>
@@ -68,19 +69,49 @@ $hasPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] =
                     "<td>" + data[crew].driver_name + "</td>" +
                     "<td>" + data[crew].doctor_name + "</td>" +
                     "<td>" + data[crew].orderly_name + "</td>" +
-                    "<td>" + ((data[crew].paramedic_name) ?? "Отсутствует") + "</td>" +
+                    "<td>" + ((data[crew].paramedic_name) ?? "Отсутствует") + "</td>";
                     <?php if ($hasPermission): ?>
-                    "<td><a href='update.php?id=" + data[crew].id_crew + "'>Изменить</a> | <a href='#' onClick=Remove('" + data[crew].id_crew + "')>Удалить</a></td>" +
+                    response += "<td class='text-center'><input type='checkbox' class='status-checkbox' data-brigade-id='" + data[crew].id_crew + "'" + (data[crew].is_available ? " checked" : "") + "></td>";
                     <?php endif; ?>
-                    "</tr>";
+                    <?php if ($hasPermission): ?>
+                    response += "<td><a href='update.php?id=" + data[crew].id_crew + "'>Изменить</a> | <a href='#' onClick=Remove('" + data[crew].id_crew + "')>Удалить</a></td>";
+                    <?php endif; ?>
+                    response += "</tr>";
             }
             $(response).appendTo($("#crews tbody")); 
         }
     }); 
  });
+
+ $(document).on('change', '.status-checkbox', function() {
+     const brigadeId = $(this).data('brigade-id');
+     const isAvailable = $(this).is(':checked') ? 1 : 0;
+
+     $.ajax({
+         type: 'POST',
+         url: '../api/crew/update_status.php',
+         data: {
+             id: brigadeId,
+             is_available: isAvailable
+         },
+         contentType: 'application/json',
+         dataType: 'json',
+         success: function(response) {
+             if (response.success) {
+                 console.log('Status updated successfully');
+             } else {
+                 console.error('Failed to update status');
+             }
+         },
+         error: function(error) {
+             console.error('Error:', error);
+         }
+     });
+ });
+
+
  function Remove(id){
-    var result = confirm("Вы уверены что хотите удалить экипаж?"); 
-    if (result == true) { 
+    if (confirm("Вы уверены что хотите удалить экипаж?")) {
         $.ajax(
         {
             type: "POST",
@@ -104,4 +135,5 @@ $hasPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] =
         });
     }
  }
+
 </script>

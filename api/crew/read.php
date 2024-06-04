@@ -27,7 +27,8 @@ if($num>0){
             "driver_name" => $driver_name,
             "doctor_name" => $doctor_name,
             "paramedic_name" => $paramedic_name,
-            "orderly_name" =>  $orderly_name
+            "orderly_name" =>  $orderly_name,
+            "is_available" => $is_available
         );
         array_push($crews_arr["crews"], $crew_item);
     }

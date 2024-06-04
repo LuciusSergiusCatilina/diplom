@@ -11,6 +11,7 @@ class Crew
     public $id_doctor; // Добавлено свойство для врача
     public $id_paramedic; // Добавлено свойство для парамедика
     public $id_orderly; // Добавлено свойство для медсестры
+    public $is_available;
 
     // constructor with $db as database connection
     public function __construct($db)
@@ -24,6 +25,7 @@ class Crew
         // select all query with JOINs
         $query = "SELECT
                 c.id_crew,
+                c.is_available,
                 d.name as driver_name,
                 doc.name as doctor_name,
                 o.name as orderly_name,
@@ -138,6 +140,30 @@ class Crew
         return false;
     }
 }
+
+    function update_status()
+    {
+        try {
+            // query to update record
+            $query = 'UPDATE ' . $this->table_name . ' SET is_avialable = ? WHERE id_crew=?';
+
+            // prepare query
+            $stmt = $this->conn->prepare($query);
+
+            // bind values
+            $stmt->bindParam(1, $this->is_available);
+            $stmt->bindParam(2, $this->id_crew);
+
+            // execute query
+            if ($stmt->execute()) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 
 
     // delete crew
