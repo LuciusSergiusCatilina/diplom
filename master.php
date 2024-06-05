@@ -1,8 +1,8 @@
 <?php
+
 session_start();
 if (!isset($_SESSION['user_id'])) {
     header("location:/notauthorize.php");
-//или сообщение + таймаут и редирект на авторизацию
 }
 $HRPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] === 'Начальник отдела кадров');
 $CMOPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] === 'Начальник подстанции');
@@ -29,8 +29,8 @@ $DispatcherPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_r
 <div class="wrapper">
   <header class="main-header">
     <a href="/dashboard.php" class="logo">
-      <span class="logo-mini"><b>П</b>одстанция</span>
-      <span class="logo-lg">Подстанция</span>
+      <span class="logo-mini"><i class="fa fa-hospital-o "></i></span>
+      <span class="logo-lg"><b>П</b>одстанция</span>
     </a>
     <nav class="navbar navbar-static-top" role="navigation">
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
@@ -45,14 +45,14 @@ $DispatcherPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_r
                   <!-- Menu Toggle Button -->
                   <a href="" class="dropdown-toggle" data-toggle="dropdown">
                       <!-- The user image in the navbar-->
-                      <img src="../dist/img/avatar5.png" class="user-image" alt="User Image">
+                      <img src= "<?= $_SESSION['photo'] ?>" class="user-image" alt="User Image">
                       <!-- hidden-xs hides the username on small devices so only the image appears. -->
                       <span class="hidden-xs"><?= $_SESSION['user_name']; ?></span>
                   </a>
                   <ul class="dropdown-menu">
                       <!-- The user image in the menu -->
                       <li class="user-header">
-                          <img src="../dist/img/avatar5.png" class="img-circle" alt="User Image">
+                          <img src="<?= $_SESSION['photo'] ?>" class="img-circle" alt="Ваша аватарка">
                           <p>
                               <?= $_SESSION['user_name']; ?> - <?= $_SESSION['user_role']; ?>
                           </p>
@@ -60,7 +60,10 @@ $DispatcherPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_r
 
                       <!-- Menu Footer-->
                       <li class="user-footer">
-                          <div class="m-a">
+                          <div class="pull-left">
+                              <a href='profile.php?id=<?php echo $_SESSION['user_id']; ?>' class="btn btn-default btn-flat">Профиль</a>
+                          </div>
+                          <div class="pull-right">
                               <a href="/api/User/logout.php" class="btn btn-danger btn-flat">Выйти</a>
                           </div>
                       </li>
@@ -75,7 +78,7 @@ $DispatcherPermission = ($_SESSION['user_role'] === 'admin' || $_SESSION['user_r
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="../dist/img/avatar5.png" class="img-circle" alt="User Image">
+                <img src="<?= $_SESSION['photo'] ?>" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
                 <p><?= $_SESSION['user_name']; ?></p>

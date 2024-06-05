@@ -81,6 +81,8 @@ class Crew
   function create()
   {
     try {
+      $this->conn->beginTransaction();
+
       $query = 'INSERT INTO ' . $this->table_name . ' (id_crew, id_driver, id_doctor, id_paramedic, id_orderly) VALUES (?, ?, ?, ?, ?)';
       $stmt = $this->conn->prepare($query);
 
@@ -91,11 +93,14 @@ class Crew
       $stmt->bindParam(5, $this->id_orderly);
 
       if ($stmt->execute()) {
+        $this->conn->commit();
         return true;
+      } else {
+        $this->conn->rollBack();
+        return false;
       }
-
-      return false;
     } catch (Exception $e) {
+      $this->conn->rollBack();
       return false;
     }
   }
@@ -104,6 +109,8 @@ class Crew
   function update()
   {
     try {
+      $this->conn->beginTransaction();
+
       $query = 'UPDATE ' . $this->table_name . ' SET id_driver=?, id_doctor=?, id_paramedic=?, id_orderly=? WHERE id_crew=?';
       $stmt = $this->conn->prepare($query);
 
@@ -114,11 +121,14 @@ class Crew
       $stmt->bindParam(5, $this->id_crew);
 
       if ($stmt->execute()) {
+        $this->conn->commit();
         return true;
+      } else {
+        $this->conn->rollBack();
+        return false;
       }
-
-      return false;
     } catch (Exception $e) {
+      $this->conn->rollBack();
       return false;
     }
   }
@@ -127,6 +137,8 @@ class Crew
   function update_status()
   {
     try {
+      $this->conn->beginTransaction();
+
       $query = 'UPDATE ' . $this->table_name . ' SET is_available = ? WHERE id_crew=?';
       $stmt = $this->conn->prepare($query);
 
@@ -134,11 +146,14 @@ class Crew
       $stmt->bindParam(2, $this->id_crew);
 
       if ($stmt->execute()) {
+        $this->conn->commit();
         return true;
+      } else {
+        $this->conn->rollBack();
+        return false;
       }
-
-      return false;
     } catch (Exception $e) {
+      $this->conn->rollBack();
       return false;
     }
   }
@@ -146,15 +161,24 @@ class Crew
   // delete crew
   function delete()
   {
-    $query = 'DELETE FROM ' . $this->table_name . ' WHERE id_crew=?';
-    $stmt = $this->conn->prepare($query);
-    $stmt->bindParam(1, $this->id_crew);
+    try {
+      $this->conn->beginTransaction();
 
-    if ($stmt->execute()) {
-      return true;
+      $query = 'DELETE FROM ' . $this->table_name . ' WHERE id_crew=?';
+      $stmt = $this->conn->prepare($query);
+      $stmt->bindParam(1, $this->id_crew);
+
+      if ($stmt->execute()) {
+        $this->conn->commit();
+        return true;
+      } else {
+        $this->conn->rollBack();
+        return false;
+      }
+    } catch (Exception $e) {
+      $this->conn->rollBack();
+      return false;
     }
-
-    return false;
   }
 
   // get all drivers
@@ -197,4 +221,5 @@ class Crew
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 }
+
 ?>

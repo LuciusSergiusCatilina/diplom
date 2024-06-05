@@ -1,123 +1,105 @@
 <?php
 class Driver {
-    // database connection and table name
     private $conn;
-    private $table_name = "drivers"; // Изменено на имя таблицы в базе данных
-
-    // object properties
-    public $id_drivers; // Изменено на имя столбца в базе данных
+    private $table_name = "drivers";
+    public $id_drivers;
     public $name;
-    public $phone; // Изменено на имя столбца в базе данных
+    public $phone;
 
-    // constructor with $db as database connection
     public function __construct($db){
         $this->conn = $db;
     }
 
-    // read all drivers
+    // Начало транзакции перед каждым изменением данных
+    protected function startTransaction(){
+        $this->conn->beginTransaction();
+    }
+
+    // Завершение транзакции после успешного выполнения всех операций
+    protected function commitTransaction(){
+        $this->conn->commit();
+    }
+
+    // Откат транзакции в случае ошибки
+    protected function rollbackTransaction(){
+        $this->conn->rollback();
+    }
+
+    // Функция для чтения всех водителей
     function read(){
-        // select all query
-        $query = "SELECT
-                    `id_drivers`, `name`, `phone`
-                FROM
-                    " . $this->table_name . " 
-                ORDER BY
-                    id_drivers DESC"; // Изменено на имя столбца в базе данных
-
-        // prepare query statement
+        $query = "SELECT `id_drivers`, `name`, `phone` FROM ". $this->table_name. " ORDER BY id_drivers DESC";
         $stmt = $this->conn->prepare($query);
-
-        // execute query
         $stmt->execute();
-
         return $stmt;
     }
 
-    // get single driver data
+    // Функция для получения данных одного водителя
     function read_single(){
-        // select all query
-        $query = "SELECT
-                    `id_drivers`, `name`, `phone`
-                FROM
-                    " . $this->table_name . " 
-                WHERE
-                    id_drivers= '".$this->id_drivers."'"; // Изменено на имя столбца в базе данных
-
-        // prepare query statement
+        $query = "SELECT `id_drivers`, `name`, `phone` FROM ". $this->table_name. " WHERE id_drivers= :id_drivers";
         $stmt = $this->conn->prepare($query);
-
-        // execute query
+        $stmt->bindParam(':id_drivers', $this->id_drivers, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt;
     }
 
-    // create driver
+    // Создание нового водителя
     function create(){
         try{
-            // query to insert record
-            $query = "INSERT INTO ". $this->table_name ." 
-                            (`name`, `phone`)
-                     VALUES
-                            ('".$this->name."', '".$this->phone."')"; // Изменено на имя столбца в базе данных
-
-            // prepare query
+            $this->startTransaction();
+            $query = "INSERT INTO ". $this->table_name." (`name`, `phone`) VALUES (:name, :phone)";
             $stmt = $this->conn->prepare($query);
-
-            // execute query
+            $stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
+            $stmt->bindParam(':phone', $this->phone, PDO::PARAM_STR);
             if($stmt->execute()){
-                $this->id_drivers = $this->conn->lastInsertId(); // Изменено на имя столбца в базе данных
+                $this->id_drivers = $this->conn->lastInsertId();
+                $this->commitTransaction();
                 return true;
             }
-
+            $this->rollbackTransaction();
             return false;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
+            $this->rollbackTransaction();
             return false;
         }
     }
 
-    // update driver 
+    // Обновление данных водителя
     function update(){
         try{
-            // query to insert record
-            $query = "UPDATE
-                        " . $this->table_name . "
-                    SET
-                        name='".$this->name."', phone='".$this->phone."'
-                    WHERE
-                        id_drivers='".$this->id_drivers."'"; // Изменено на имя столбца в базе данных
-
-            // prepare query
+            $this->startTransaction();
+            $query = "UPDATE ". $this->table_name. " SET name=:name, phone=:phone WHERE id_drivers=:id_drivers";
             $stmt = $this->conn->prepare($query);
-            // execute query
+            $stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
+            $stmt->bindParam(':phone', $this->phone, PDO::PARAM_STR);
+            $stmt->bindParam(':id_drivers', $this->id_drivers, PDO::PARAM_INT);
             if($stmt->execute()){
+                $this->commitTransaction();
                 return true;
             }
+            $this->rollbackTransaction();
             return false;
-        }
-        catch (Exception $e) 
-        {
+        } catch (Exception $e) {
+            $this->rollbackTransaction();
             return false;
         }
     }
 
-    // delete driver
+    // Удаление водителя
     function delete(){
-        
-        // query to insert record
-        $query = "DELETE FROM
-                    " . $this->table_name . "
-                WHERE
-                    id_drivers= '".$this->id_drivers."'"; // Изменено на имя столбца в базе данных
-        
-        // prepare query
-        $stmt = $this->conn->prepare($query);
-        
-        // execute query
-        if($stmt->execute()){
-            return true;
+        try{
+            $this->startTransaction();
+            $query = "DELETE FROM ". $this->table_name. " WHERE id_drivers= :id_drivers";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':id_drivers', $this->id_drivers, PDO::PARAM_INT);
+            if($stmt->execute()){
+                $this->commitTransaction();
+                return true;
+            }
+            $this->rollbackTransaction();
+            return false;
+        } catch (Exception $e) {
+            $this->rollbackTransaction();
+            return false;
         }
-        return false;
     }
 }
-?>

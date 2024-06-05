@@ -11,7 +11,6 @@ $call->id_crew = ($_POST['id_crew'] == '') ? null : $_POST['id_crew'];
 $call->id_patient = ($_POST['id_patient'] == '') ? null : $_POST['id_patient'];
 $call->adress = $_POST['adress'];
 $call->type = $_POST['type'];
-
 $phoneNumber = $_POST['phone'];
 if (str_contains($phoneNumber, "+")){
   $call->number = substr($phoneNumber,1);
@@ -19,9 +18,6 @@ if (str_contains($phoneNumber, "+")){
 else {
   $call->number = $_POST['phone'];
 }
-
-
-
 
 if ($call->create()) {
      $call_arr = array(

@@ -1,130 +1,98 @@
 <?php
-class Paramedic{
- 
-    // database connection and table name
+class Paramedic {
     private $conn;
-    private $table_name = "paramedic"; // Изменено на имя таблицы в базе данных
- 
-    // object properties
-    public $id_paramedic; // Изменено на имя столбца в базе данных
-    public $name;
-    public $number; // Изменено на имя столбца в базе данных
+    private $table_name = "paramedic";
 
-    // constructor with $db as database connection
+    public $id_paramedic;
+    public $name;
+    public $number;
+
     public function __construct($db){
         $this->conn = $db;
     }
 
-    // read all paramedics
+    protected function startTransaction(){
+        $this->conn->beginTransaction();
+    }
+
+    protected function commitTransaction(){
+        $this->conn->commit();
+    }
+
+    protected function rollbackTransaction(){
+        $this->conn->rollback();
+    }
+
     function read(){
-    
-        // select all query
-        $query = "SELECT
-                    `id_paramedic`, `name`, `number`
-                FROM
-                    " . $this->table_name . " 
-                ORDER BY
-                    id_paramedic DESC"; // Изменено на имя столбца в базе данных
-    
-        // prepare query statement
+        $query = "SELECT `id_paramedic`, `name`, `number` FROM ". $this->table_name. " ORDER BY id_paramedic DESC";
         $stmt = $this->conn->prepare($query);
-    
-        // execute query
         $stmt->execute();
-    
         return $stmt;
     }
 
-    // get single paramedic data
     function read_single(){
-    
-        // select all query
-        $query = "SELECT
-                    `id_paramedic`, `name`, `number`
-                FROM
-                    " . $this->table_name . " 
-                WHERE
-                    id_paramedic= '".$this->id_paramedic."'"; // Изменено на имя столбца в базе данных
-    
-        // prepare query statement
+        $query = "SELECT `id_paramedic`, `name`, `number` FROM ". $this->table_name. " WHERE id_paramedic= :id_paramedic";
         $stmt = $this->conn->prepare($query);
-    
-        // execute query
+        $stmt->bindParam(':id_paramedic', $this->id_paramedic, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt;
     }
 
-    // create paramedic
     function create(){
         try{
-        // query to insert record
-        $query = "INSERT INTO ". $this->table_name ." 
-                        (`name`, `number`)
-                 VALUES
-                        ('".$this->name."', '".$this->number."')"; // Изменено на имя столбца в базе данных
-    
-        // prepare query
-        $stmt = $this->conn->prepare($query);
-    
-        // execute query
-        if($stmt->execute()){
-            $this->id_paramedic = $this->conn->lastInsertId(); // Изменено на имя столбца в базе данных
-            return true;
+            $this->startTransaction();
+            $query = "INSERT INTO ". $this->table_name." (`name`, `number`) VALUES (:name, :number)";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
+            $stmt->bindParam(':number', $this->number, PDO::PARAM_STR);
+            if($stmt->execute()){
+                $this->id_paramedic = $this->conn->lastInsertId();
+                $this->commitTransaction();
+                return true;
+            }
+            $this->rollbackTransaction();
+            return false;
+        } catch (Exception $e) {
+            $this->rollbackTransaction();
+            return false;
         }
-
-        return false;
-    }
-    catch (Exception $e) {
-        return false;
-    }
     }
 
-    // update paramedic 
     function update(){
-    try{
-        // query to insert record
-        $query = "UPDATE
-                    " . $this->table_name . "
-                SET
-                    name='".$this->name."', number='".$this->number."'
-                WHERE
-                    id_paramedic='".$this->id_paramedic."'"; // Изменено на имя столбца в базе данных
-    
-        // prepare query
-        $stmt = $this->conn->prepare($query);
-        // execute query
-        if($stmt->execute()){
-            return true;
+        try{
+            $this->startTransaction();
+            $query = "UPDATE ". $this->table_name. " SET name=:name, number=:number WHERE id_paramedic=:id_paramedic";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
+            $stmt->bindParam(':number', $this->number, PDO::PARAM_STR);
+            $stmt->bindParam(':id_paramedic', $this->id_paramedic, PDO::PARAM_INT);
+            if($stmt->execute()){
+                $this->commitTransaction();
+                return true;
+            }
+            $this->rollbackTransaction();
+            return false;
+        } catch (Exception $e) {
+            $this->rollbackTransaction();
+            return false;
         }
-        return false;
-    }
-    catch (Exception $e) 
-    {
-        return false;
-    }
     }
 
-    // delete paramedic
     function delete(){
-    try{
-        // query to insert record
-        $query = "DELETE FROM
-                    " . $this->table_name . "
-                WHERE
-                    id_paramedic= '".$this->id_paramedic."'"; // Изменено на имя столбца в базе данных
-        
-        // prepare query
-        $stmt = $this->conn->prepare($query);
-        
-        // execute query
-        if($stmt->execute()){
-            return true;
+        try{
+            $this->startTransaction();
+            $query = "DELETE FROM ". $this->table_name. " WHERE id_paramedic= :id_paramedic";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':id_paramedic', $this->id_paramedic, PDO::PARAM_INT);
+            if($stmt->execute()){
+                $this->commitTransaction();
+                return true;
+            }
+            $this->rollbackTransaction();
+            return false;
+        } catch (Exception $e) {
+            $this->rollbackTransaction();
+            return false;
         }
-        return false;
-    }
-    catch (Exception $e) {
-        return false;
-    }
     }
 }
-?>

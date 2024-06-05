@@ -1,137 +1,108 @@
 <?php
-class Patient{
- 
-    // database connection and table name
-    private $conn;
-    private $table_name = "patient"; // Изменено на имя таблицы в базе данных
- 
-    // object properties
-    public $id_patient; // Изменено на имя столбца в базе данных
-    public $name;
-    public $number; // Изменено на имя столбца в базе данных
-    public $adress; // Изменено на имя столбца в базе данных
- 
-    // constructor with $db as database connection
-    public function __construct($db){
-        $this->conn = $db;
-    }
+class Patient {
+  private $conn;
+  private $table_name = "patient";
 
-    // read all patients
-    function read(){
-    
-        // select all query
-        $query = "SELECT
-                    `id_patient`, `name`, `number`, `adress`
-                FROM
-                    " . $this->table_name . " 
-                ORDER BY
-                    id_patient DESC"; // Изменено на имя столбца в базе данных
-    
-        // prepare query statement
-        $stmt = $this->conn->prepare($query);
-    
-        // execute query
-        $stmt->execute();
-    
-        return $stmt;
-    }
+  public $id_patient;
+  public $name;
+  public $number;
+  public $address;
 
-    // get single patient data
-    function read_single(){
-    
-        // select all query
-        $query = "SELECT
-                    `id_patient`, `name`, `number`, `adress`
-                FROM
-                    " . $this->table_name . " 
-                WHERE
-                    id_patient= '".$this->id_patient."'"; // Изменено на имя столбца в базе данных
-    
-        // prepare query statement
-        $stmt = $this->conn->prepare($query);
-    
-        // execute query
-        $stmt->execute();
-        return $stmt;
-    }
+  public function __construct($db){
+    $this->conn = $db;
+  }
 
-    // create patient
-    function create(){
-        try{
-        // query to insert record
-        $query = "INSERT INTO ". $this->table_name ." 
-                        (`name`, `number`, `adress`)
-                 VALUES
-                        ('".$this->name."', '".$this->number."', '".$this->adress."')"; // Изменено на имя столбца в базе данных
-    
-        // prepare query
-        $stmt = $this->conn->prepare($query);
-    
-        // execute query
-        if($stmt->execute()){
-            $this->id_patient = $this->conn->lastInsertId(); // Изменено на имя столбца в базе данных
-            return true;
-        }
+  protected function startTransaction(){
+    $this->conn->beginTransaction();
+  }
 
-        return false;
-    }
-    catch (Exception $e) {
-        return false;
-    }
-    }
+  protected function commitTransaction(){
+    $this->conn->commit();
+  }
 
-    // update patient 
-    function update(){
+  protected function rollbackTransaction(){
+    $this->conn->rollback();
+  }
+
+  function read(){
+    $query = "SELECT `id_patient`, `name`, `number`, `address` FROM ". $this->table_name. " ORDER BY id_patient DESC";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+    return $stmt;
+  }
+
+  function read_single(){
+    $query = "SELECT `id_patient`, `name`, `number`, `address` FROM ". $this->table_name. " WHERE id_patient= :id_patient";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(':id_patient', $this->id_patient, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt;
+  }
+
+  function create(){
     try{
-        // query to insert record
-        $query = "UPDATE
-                    " . $this->table_name . "
-                SET
-                    name='".$this->name."', number='".$this->number."', adress='".$this->adress."'
-                WHERE
-                    id_patient='".$this->id_patient."'"; // Изменено на имя столбца в базе данных
-    
-        // prepare query
-        $stmt = $this->conn->prepare($query);
-        // execute query
-        if($stmt->execute()){
-            return true;
-        }
-        return false;
-    }
-    catch (Exception $e) 
-    {
-        return false;
-    }
-    }
-
-    // delete patient
-    function delete(){
-    try{
-        // query to insert record
-        $query = "DELETE FROM
-                    " . $this->table_name . "
-                WHERE
-                    id_patient= '".$this->id_patient."'"; // Изменено на имя столбца в базе данных
-        
-        // prepare query
-        $stmt = $this->conn->prepare($query);
-        
-        // execute query
-        if($stmt->execute()){
-            return true;
-        }
-        return false;
-    }
-    catch (Exception $e) {
-        return false;
-    }
-    }
-
-    function getCount(){
-        $query = "SELECT COUNT(*) FROM " . $this->table_name;
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        return $stmt->fetchColumn();         
+      $this->startTransaction();
+      $query = "INSERT INTO ". $this->table_name." (`name`, `number`, `address`) VALUES (:name, :number, :address)";
+      $stmt = $this->conn->prepare($query);
+      $stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
+      $stmt->bindParam(':number', $this->number, PDO::PARAM_STR);
+      $stmt->bindParam(':address', $this->address, PDO::PARAM_STR);
+      if($stmt->execute()){
+        $this->id_patient = $this->conn->lastInsertId();
+        $this->commitTransaction();
+        return true;
       }
+      $this->rollbackTransaction();
+      return false;
+    } catch (Exception $e) {
+      $this->rollbackTransaction();
+      return false;
+    }
+  }
+
+  function update(){
+    try{
+      $this->startTransaction();
+      $query = "UPDATE ". $this->table_name. " SET name=:name, number=:number, address=:address WHERE id_patient=:id_patient";
+      $stmt = $this->conn->prepare($query);
+      $stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
+      $stmt->bindParam(':number', $this->number, PDO::PARAM_STR);
+      $stmt->bindParam(':address', $this->address, PDO::PARAM_STR);
+      $stmt->bindParam(':id_patient', $this->id_patient, PDO::PARAM_INT);
+      if($stmt->execute()){
+        $this->commitTransaction();
+        return true;
+      }
+      $this->rollbackTransaction();
+      return false;
+    } catch (Exception $e) {
+      $this->rollbackTransaction();
+      return false;
+    }
+  }
+
+  function delete(){
+    try{
+      $this->startTransaction();
+      $query = "DELETE FROM ". $this->table_name. " WHERE id_patient= :id_patient";
+      $stmt = $this->conn->prepare($query);
+      $stmt->bindParam(':id_patient', $this->id_patient, PDO::PARAM_INT);
+      if($stmt->execute()){
+        $this->commitTransaction();
+        return true;
+      }
+      $this->rollbackTransaction();
+      return false;
+    } catch (Exception $e) {
+      $this->rollbackTransaction();
+      return false;
+    }
+  }
+
+  function getCount(){
+    $query = "SELECT COUNT(*) FROM ". $this->table_name;
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchColumn();
+  }
 }

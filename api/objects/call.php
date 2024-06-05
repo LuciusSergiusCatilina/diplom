@@ -61,75 +61,118 @@ class Call
 
     return $stmt;
   }
- 
+
   function create()
   {
     try {
-      // query to insert record
+      // начинаем транзакцию
+      $this->conn->beginTransaction();
+
+      // запрос для вставки записи
       $query = 'INSERT INTO ' . $this->table_name . '(`id_crew`, `id_patient`, `adress`, `number`, `type`) VALUES (?, ?, ?, ?, ?)';
 
-      // prepare query
+      // подготавливаем запрос
       $stmt = $this->conn->prepare($query);
 
-
+      // привязываем параметры к значениям объекта
       $stmt->bindParam(1, $this->id_crew);
       $stmt->bindParam(2, $this->id_patient);
       $stmt->bindParam(3, $this->adress);
       $stmt->bindParam(4, $this->number);
       $stmt->bindParam(5, $this->type);
 
+      // выполнение запроса
       if ($stmt->execute()) {
+        // обновляем статус бригады
+        $update_query = 'UPDATE crews SET is_available = 0 WHERE id_crew = ?';
+        $update_stmt = $this->conn->prepare($update_query);
+        $update_stmt->bindParam(1, $this->id_crew);
+        $update_stmt->execute();
+
+        // фиксируем транзакцию
+        $this->conn->commit();
         return true;
       }
 
+      // откатываем транзакцию в случае неудачи
+      $this->conn->rollBack();
       return false;
     } catch (Exception $e) {
+      // откатываем транзакцию в случае ошибки
+      $this->conn->rollBack();
       return false;
     }
   }
-  // update crew
-// update call
-function update()
-{
+
+  function update()
+  {
     try {
-        $query = 'UPDATE ' . $this->table_name . ' SET id_crew=?, id_patient=?, adress=?, number=?, type=? WHERE id_call=?';
+      // начинаем транзакцию
+      $this->conn->beginTransaction();
 
-        $stmt = $this->conn->prepare($query);
+      // запрос для обновления записи
+      $query = 'UPDATE ' . $this->table_name . ' SET id_crew=?, id_patient=?, adress=?, number=?, type=? WHERE id_call=?';
 
-        $stmt->bindParam(1, $this->id_crew);
-        $stmt->bindParam(2, $this->id_patient);
-        $stmt->bindParam(3, $this->adress);
-        $stmt->bindParam(4, $this->number);
-        $stmt->bindParam(5, $this->type);
-        $stmt->bindParam(6, $this->id_call);
+      // подготавливаем запрос
+      $stmt = $this->conn->prepare($query);
 
-        if ($stmt->execute()) {
-            return true;
-        }
-        return false;
+      // привязываем параметры к значениям объекта
+      $stmt->bindParam(1, $this->id_crew);
+      $stmt->bindParam(2, $this->id_patient);
+      $stmt->bindParam(3, $this->adress);
+      $stmt->bindParam(4, $this->number);
+      $stmt->bindParam(5, $this->type);
+      $stmt->bindParam(6, $this->id_call);
+
+      // выполнение запроса
+      if ($stmt->execute()) {
+        // фиксируем транзакцию
+        $this->conn->commit();
+        return true;
+      }
+
+      // откатываем транзакцию в случае неудачи
+      $this->conn->rollBack();
+      return false;
     } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
-        return false;
+      // откатываем транзакцию в случае ошибки
+      $this->conn->rollBack();
+      echo "Error: " . $e->getMessage();
+      return false;
     }
-}
+  }
 
   function delete()
   {
-      // query to delete record
+    try {
+      // начинаем транзакцию
+      $this->conn->beginTransaction();
+
+      // запрос для удаления записи
       $query = 'DELETE FROM ' . $this->table_name . ' WHERE id_call=?';
-  
-      // prepare query
+
+      // подготавливаем запрос
       $stmt = $this->conn->prepare($query);
-  
-      // bind id of call to be deleted
+
+      // привязываем параметр к значению объекта
       $stmt->bindParam(1, $this->id_call);
-  
-      // execute query
+
+      // выполнение запроса
       if ($stmt->execute()) {
-          return true;
+        // фиксируем транзакцию
+        $this->conn->commit();
+        return true;
       }
-  
+
+      // откатываем транзакцию в случае неудачи
+      $this->conn->rollBack();
       return false;
+    } catch (Exception $e) {
+      // откатываем транзакцию в случае ошибки
+      $this->conn->rollBack();
+      echo "Error: " . $e->getMessage();
+      return false;
+    }
   }
 
   function getUsers()

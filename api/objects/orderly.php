@@ -1,130 +1,97 @@
 <?php
-class Orderly{
- 
-    // database connection and table name
+class Orderly {
     private $conn;
-    private $table_name = "orderly"; // Изменено на имя таблицы в базе данных
- 
-    // object properties
-    public $id_orderly; // Изменено на имя столбца в базе данных
+    private $table_name = "orderly";
+    public $id_orderly;
     public $name;
-    public $number; // Изменено на имя столбца в базе данных
+    public $number;
 
-    // constructor with $db as database connection
     public function __construct($db){
         $this->conn = $db;
     }
 
-    // read all orderlies
+    protected function startTransaction(){
+        $this->conn->beginTransaction();
+    }
+
+    protected function commitTransaction(){
+        $this->conn->commit();
+    }
+
+    protected function rollbackTransaction(){
+        $this->conn->rollback();
+    }
+
     function read(){
-    
-        // select all query
-        $query = "SELECT
-                    `id_orderly`, `name`, `number`
-                FROM
-                    " . $this->table_name . " 
-                ORDER BY
-                    id_orderly DESC"; // Изменено на имя столбца в базе данных
-    
-        // prepare query statement
+        $query = "SELECT `id_orderly`, `name`, `number` FROM ". $this->table_name. " ORDER BY id_orderly DESC";
         $stmt = $this->conn->prepare($query);
-    
-        // execute query
         $stmt->execute();
-    
         return $stmt;
     }
 
-    // get single orderly data
     function read_single(){
-    
-        // select all query
-        $query = "SELECT
-                    `id_orderly`, `name`, `number`
-                FROM
-                    " . $this->table_name . " 
-                WHERE
-                    id_orderly= '".$this->id_orderly."'"; // Изменено на имя столбца в базе данных
-    
-        // prepare query statement
+        $query = "SELECT `id_orderly`, `name`, `number` FROM ". $this->table_name. " WHERE id_orderly= :id_orderly";
         $stmt = $this->conn->prepare($query);
-    
-        // execute query
+        $stmt->bindParam(':id_orderly', $this->id_orderly, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt;
     }
 
-    // create orderly
     function create(){
         try{
-        // query to insert record
-        $query = "INSERT INTO ". $this->table_name ." 
-                        (`name`, `number`)
-                 VALUES
-                        ('".$this->name."', '".$this->number."')"; // Изменено на имя столбца в базе данных
-    
-        // prepare query
-        $stmt = $this->conn->prepare($query);
-    
-        // execute query
-        if($stmt->execute()){
-            $this->id_orderly = $this->conn->lastInsertId(); // Изменено на имя столбца в базе данных
-            return true;
+            $this->startTransaction();
+            $query = "INSERT INTO ". $this->table_name." (`name`, `number`) VALUES (:name, :number)";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
+            $stmt->bindParam(':number', $this->number, PDO::PARAM_STR);
+            if($stmt->execute()){
+                $this->id_orderly = $this->conn->lastInsertId();
+                $this->commitTransaction();
+                return true;
+            }
+            $this->rollbackTransaction();
+            return false;
+        } catch (Exception $e) {
+            $this->rollbackTransaction();
+            return false;
         }
-
-        return false;
-    }
-    catch (Exception $e) {
-        return false;
-    }
     }
 
-    // update orderly 
     function update(){
-    try{
-        // query to insert record
-        $query = "UPDATE
-                    " . $this->table_name . "
-                SET
-                    name='".$this->name."', number='".$this->number."'
-                WHERE
-                    id_orderly='".$this->id_orderly."'"; // Изменено на имя столбца в базе данных
-    
-        // prepare query
-        $stmt = $this->conn->prepare($query);
-        // execute query
-        if($stmt->execute()){
-            return true;
+        try{
+            $this->startTransaction();
+            $query = "UPDATE ". $this->table_name. " SET name=:name, number=:number WHERE id_orderly=:id_orderly";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
+            $stmt->bindParam(':number', $this->number, PDO::PARAM_STR);
+            $stmt->bindParam(':id_orderly', $this->id_orderly, PDO::PARAM_INT);
+            if($stmt->execute()){
+                $this->commitTransaction();
+                return true;
+            }
+            $this->rollbackTransaction();
+            return false;
+        } catch (Exception $e) {
+            $this->rollbackTransaction();
+            return false;
         }
-        return false;
-    }
-    catch (Exception $e) 
-    {
-        return false;
-    }
     }
 
-    // delete orderly
     function delete(){
-    try{
-        // query to insert record
-        $query = "DELETE FROM
-                    " . $this->table_name . "
-                WHERE
-                    id_orderly= '".$this->id_orderly."'"; // Изменено на имя столбца в базе данных
-        
-        // prepare query
-        $stmt = $this->conn->prepare($query);
-        
-        // execute query
-        if($stmt->execute()){
-            return true;
+        try{
+            $this->startTransaction();
+            $query = "DELETE FROM ". $this->table_name. " WHERE id_orderly= :id_orderly";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':id_orderly', $this->id_orderly, PDO::PARAM_INT);
+            if($stmt->execute()){
+                $this->commitTransaction();
+                return true;
+            }
+            $this->rollbackTransaction();
+            return false;
+        } catch (Exception $e) {
+            $this->rollbackTransaction();
+            return false;
         }
-        return false;
-    }
-    catch (Exception $e) {
-        return false;
-    }
     }
 }
-?>
