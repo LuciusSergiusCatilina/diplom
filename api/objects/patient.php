@@ -1,108 +1,128 @@
 <?php
-class Patient {
+class Patient{
+
   private $conn;
   private $table_name = "patient";
 
   public $id_patient;
   public $name;
   public $number;
-  public $address;
+  public $adress;
 
   public function __construct($db){
     $this->conn = $db;
   }
 
-  protected function startTransaction(){
-    $this->conn->beginTransaction();
-  }
-
-  protected function commitTransaction(){
-    $this->conn->commit();
-  }
-
-  protected function rollbackTransaction(){
-    $this->conn->rollback();
-  }
-
   function read(){
-    $query = "SELECT `id_patient`, `name`, `number`, `address` FROM ". $this->table_name. " ORDER BY id_patient DESC";
+
+    $query = "SELECT `id_patient`, `name`, `number`, `adress` FROM " . $this->table_name . " ORDER BY id_patient DESC";
+
     $stmt = $this->conn->prepare($query);
+
     $stmt->execute();
+
     return $stmt;
   }
 
   function read_single(){
-    $query = "SELECT `id_patient`, `name`, `number`, `address` FROM ". $this->table_name. " WHERE id_patient= :id_patient";
+
+    $query = "SELECT `id_patient`, `name`, `number`, `adress` FROM " . $this->table_name . " WHERE id_patient = :id_patient";
+
     $stmt = $this->conn->prepare($query);
-    $stmt->bindParam(':id_patient', $this->id_patient, PDO::PARAM_INT);
+
+    $stmt->bindParam(':id_patient', $this->id_patient);
+
     $stmt->execute();
     return $stmt;
   }
 
+  // create patient
   function create(){
-    try{
-      $this->startTransaction();
-      $query = "INSERT INTO ". $this->table_name." (`name`, `number`, `address`) VALUES (:name, :number, :address)";
+    try {
+      $this->conn->beginTransaction();
+
+      $query = "INSERT INTO " . $this->table_name . " (`name`, `number`, `adress`) VALUES (:name, :number, :adress)";
+
       $stmt = $this->conn->prepare($query);
-      $stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
-      $stmt->bindParam(':number', $this->number, PDO::PARAM_STR);
-      $stmt->bindParam(':address', $this->address, PDO::PARAM_STR);
-      if($stmt->execute()){
+
+      $stmt->bindParam(':name', $this->name);
+      $stmt->bindParam(':number', $this->number);
+      $stmt->bindParam(':adress', $this->adress);
+
+      if ($stmt->execute()) {
         $this->id_patient = $this->conn->lastInsertId();
-        $this->commitTransaction();
+        $this->conn->commit();
         return true;
+      } else {
+        $this->conn->rollBack();
+        return false;
       }
-      $this->rollbackTransaction();
-      return false;
     } catch (Exception $e) {
-      $this->rollbackTransaction();
+      $this->conn->rollBack();
+      echo "Create error: " . $e->getMessage();
       return false;
     }
   }
 
+  // update patient
   function update(){
-    try{
-      $this->startTransaction();
-      $query = "UPDATE ". $this->table_name. " SET name=:name, number=:number, address=:address WHERE id_patient=:id_patient";
+    try {
+      $this->conn->beginTransaction();
+
+      $query = "UPDATE " . $this->table_name . " SET name = :name, number = :number, adress = :adress WHERE id_patient = :id_patient";
+
       $stmt = $this->conn->prepare($query);
-      $stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
-      $stmt->bindParam(':number', $this->number, PDO::PARAM_STR);
-      $stmt->bindParam(':address', $this->address, PDO::PARAM_STR);
-      $stmt->bindParam(':id_patient', $this->id_patient, PDO::PARAM_INT);
-      if($stmt->execute()){
-        $this->commitTransaction();
+
+      $stmt->bindParam(':name', $this->name);
+      $stmt->bindParam(':number', $this->number);
+      $stmt->bindParam(':adress', $this->adress);
+      $stmt->bindParam(':id_patient', $this->id_patient);
+
+      // execute query
+      if ($stmt->execute()) {
+        $this->conn->commit();
         return true;
+      } else {
+        $this->conn->rollBack();
+        return false;
       }
-      $this->rollbackTransaction();
-      return false;
     } catch (Exception $e) {
-      $this->rollbackTransaction();
+      $this->conn->rollBack();
+      echo "Update error: " . $e->getMessage();
       return false;
     }
   }
 
+  // delete patient
   function delete(){
-    try{
-      $this->startTransaction();
-      $query = "DELETE FROM ". $this->table_name. " WHERE id_patient= :id_patient";
+    try {
+      $this->conn->beginTransaction();
+
+      $query = "DELETE FROM " . $this->table_name . " WHERE id_patient = :id_patient";
+
       $stmt = $this->conn->prepare($query);
-      $stmt->bindParam(':id_patient', $this->id_patient, PDO::PARAM_INT);
-      if($stmt->execute()){
-        $this->commitTransaction();
+
+      $stmt->bindParam(':id_patient', $this->id_patient);
+
+      if ($stmt->execute()) {
+        $this->conn->commit();
         return true;
+      } else {
+        $this->conn->rollBack();
+        return false;
       }
-      $this->rollbackTransaction();
-      return false;
     } catch (Exception $e) {
-      $this->rollbackTransaction();
+      $this->conn->rollBack();
+      echo "Delete error: " . $e->getMessage();
       return false;
     }
   }
 
   function getCount(){
-    $query = "SELECT COUNT(*) FROM ". $this->table_name;
+    $query = "SELECT COUNT(*) FROM " . $this->table_name;
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
     return $stmt->fetchColumn();
   }
 }
+?>
